@@ -10,13 +10,10 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::disableForeignKeyConstraints();
 
         Schema::table('products', function (Blueprint $table) {
-            $table->integer('category_id')->after('user_id');
-            $table->foreign('category_id')->references('id')->on('category');
+            $table->foreignId('category_id')->references('id')->on('categories')->onDelete('cascade');
         });
-        Schema::enableForeignKeyConstraints();
 
     }
 

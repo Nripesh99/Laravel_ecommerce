@@ -24,24 +24,25 @@ class ProductController extends Controller
     public function store(Request $request) :RedirectResponse
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'user_id' => 'required|integer',
-            'category_id' => 'required|integer',
+            'product_name' => 'required|string|max:255',
+            'category' => 'required|string',
+            'subCategory' => 'nullable|string',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'SKU' => 'required|unique:products,SKU|string|max:255',
             'product_description' => 'required|string',
         ]);
         $profileImage = null;
+     
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $profileImage = time() . '_' . $image->getClientOriginalName();
-            $image->store(public_path('images'), $profileImage);
+            $image->move(public_path('images'), $profileImage);
         }
         $addProduct = new Product;
-        $addProduct->name = $request->input('name');
-        $addProduct->user_id = $request->input('user_id');
-        $addProduct->category_id = $request->input('category_id');
-        $addProduct->image = $profileImage; // Store the image path in the database
+        $addProduct->name = $request->input('product_name');
+        $addProduct->user_id = auth()->id();
+        $addProduct->category_id = $request->filled('subCategory') ? $request->input('subCategory') : $request->input('category');
+        $addProduct->image = $profileImage; // Assign the file name, not the input value
         $addProduct->SKU = $request->input('SKU');
         $addProduct->product_description = $request->input('product_description');
         $addProduct->save();
@@ -80,7 +81,7 @@ class ProductController extends Controller
         $product->SKU = $request->input('SKU');
         $product->product_description = $request->input('product_description');
         $product->save();
-        return redirect()->route('products.index')->with('success', 'Product updated successfully');
+        return redirect()->route('products.create')->with('success', 'Product updated successfully');
     }
     public function delete($blog)
     {

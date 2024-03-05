@@ -5,6 +5,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StockController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -41,9 +42,11 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'],function()
 });
       
     //Categories controller
-    Route::resource('category', CategoryController::class);
+    Route::resource('categories', CategoryController::class);
     //Cart controller
-    Route::resource('cart', CartController::class);
+    Route::resource('carts', CartController::class);
+    //Stock controller
+    Route::resource('stocks', StockController::class);
     //productController
     Route::get('/products', [ProductController::class, 'index'])->name('products.index');
     Route::get('products/create',[ProductController::class, 'create'])->name('products.create');

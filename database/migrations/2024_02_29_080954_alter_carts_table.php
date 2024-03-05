@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::disableForeignKeyConstraints();
 
         Schema::table('carts', function (Blueprint $table) {
-            $table->foreign('product_id')->references('id')->on('product');
+            $table->foreignId('product_id')->references('id')->on('products');
         });
-        Schema::enableForeignKeyConstraints();
 
     }
     /**

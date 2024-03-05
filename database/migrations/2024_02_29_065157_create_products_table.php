@@ -11,21 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::disableForeignKeyConstraints();
 
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('user_id');
-            $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
+            // $table->integer('user_id');
+            // $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('image');
             $table->string('SKU')->unique();
-            $table->json('product_description');
+            $table->text('product_description');
             $table->timestamps();
 
         });
 
-        Schema::enableForeignKeyConstraints();
     }
 
     /**

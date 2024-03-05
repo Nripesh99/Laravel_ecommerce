@@ -11,14 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::disableForeignKeyConstraints();
 
         Schema::create('order_details', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('order_id');
-            $table->foreign('order_id')->references('id')->on('order');
-            $table->integer('product_id');
-            $table->foreign('product_id')->references('id')->on('product');
+            $table->foreignId('order_id')->references('id')->on('orders');
+            $table->foreignId('product_id')->references('id')->on('products');
             $table->bigInteger('quantity');
             $table->bigInteger('price');
             $table->timestamps();

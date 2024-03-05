@@ -32,10 +32,10 @@
 </head>
 
 <body>
-    <div id="id">
 
+    <div id="id">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
+            <div class="container-fluid w-90 g-0 d-flex justify-content-start">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
                 </a>
@@ -96,8 +96,10 @@
                 </div>
             </div>
         </nav>
-        <div class="container-fluid w-90 g-0 d-flex justify-content-start">
-            <div class="d-flex flex-column flex-shrink-0 p-3 ml-0 text-bg-dark" style="width: 280px;min-height:100vh">
+
+        <div class="container-fluid d-flex">
+            <div class="d-flex flex-column flex-shrink-0 p-3 ml-0 text-bg-dark"
+                style="width: 280px; min-height: 100vh;">
                 <div class="image">
                     <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
                 </div>
@@ -165,17 +167,41 @@
                         </a>
                     </li>
                 </ul>
+                
             </div>
+           
 
-
+            @yield('content')
 
 
             <div class="mt-5">
+                @if ($errors->any())
+                    <div class="container mt-5">
 
-                @yield('content')
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                @endif
+            
+
+                @include('flash-message')
             </div>
+
         </div>
+
     </div>
+    <script>
+        var alertDiv = document.getElementById('alertDiv');
+
+        setTimeout(function() {
+            alertDiv.style.display = 'none';
+        }, 5000);
+    </script>
 </body>
 
 </html>
