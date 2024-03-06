@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\Category;
+use App\Models\Stock;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
@@ -37,10 +38,15 @@ class CartController extends Controller
             'quantity' => 'required|integer|min:1',
         ]);
         $cart = new Cart;
+        $actualQuantity=Stock::where('product_id',$request->product_id);
+        if($actualQuantity<=0){
+            return back()->with('error', 'no stock present');
+        }
         $cart->user_id=$request->input('user_id');
         $cart->product_id=$request->input('product_id');
         $cart->quantity=$request->input('quantity');
         $cart->save();
+        return back()->with('success','Added to cart');
     }
 
     /**

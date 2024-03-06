@@ -172,8 +172,6 @@
            
 
             @yield('content')
-
-
             <div class="mt-5">
                 @if ($errors->any())
                     <div class="container mt-5">

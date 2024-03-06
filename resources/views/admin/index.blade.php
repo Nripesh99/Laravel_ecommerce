@@ -39,7 +39,9 @@
             <div class="row">
                 <div class="col-4">
                     <div class="card" >
-                        <p class="card-text p-4 m-4">Product</p>
+                        <a href="{{route('categories.create')}}">
+                        <p class="card-text p-4 m-4">Category</p>
+                        </a>
                     </div>
                 </div>
                 <div class="col-4">
@@ -52,9 +54,7 @@
                 </div>
                 <div class="col-4">
                     <div class="card" >
-                        <a href="{{route('products.create')}}">
                             <p class="card-text p-4 m-4">Product</p>
-                        </a>
                     </div>
                 </div>
             </div>

@@ -11,18 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::disableForeignKeyConstraints();
 
         Schema::create('stocks', function (Blueprint $table) {
             $table->id();
-            $table->integer('product_id');
-            $table->foreign('product_id')->references('id')->on('product')->onDelete('cascade');
+            $table->foreignId('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->integer('quantity');
             $table->timestamps();
-
         });
 
-        Schema::enableForeignKeyConstraints();
     }
 
     /**

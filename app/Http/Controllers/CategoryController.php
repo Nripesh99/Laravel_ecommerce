@@ -40,7 +40,7 @@ class CategoryController extends Controller
         $category->category_name=$request->input('category_name');
         $category->parent_id=$request->input('parent_id');
         $category->save();
-        return redirect()->route('category.create');
+        return redirect()->back()->with('success','Categories added succesfully');
     }
 
     /**

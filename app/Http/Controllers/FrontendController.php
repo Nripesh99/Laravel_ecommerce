@@ -2,18 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Product;
-use App\Models\Stock;
 use Illuminate\Http\Request;
 
-class StockController extends Controller
+class FrontendController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $product=Product::all();
+        $category=Category::all();
+        return view('ecommerce.index',compact('product', 'category'));
     }
 
     /**
@@ -21,8 +23,7 @@ class StockController extends Controller
      */
     public function create()
     {
-        $product=Product::all();
-        return view('stocks.create', compact('product'));
+        //
     }
 
     /**
@@ -30,25 +31,7 @@ class StockController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'product'=>'required|string',
-            'quantity'=>'required|int',
-        ]);
-        $stock = new Stock;
-        $quantityToAdd = $request->input('quantity');
-        $existingRecord=Stock::where('product_id',$request->input('product'))->first();
-        if($existingRecord){
-            $stocks =Stock::find($existingRecord->id);
-            $stocks->quantity += $quantityToAdd;
-            $stocks->save();
-        }
-        else{
-            
-            $stock->product_id=$request->input('product');
-            $stock->quantity=$request->input('quantity');
-            $stock->save();
-        }
-        return back()->with('success', 'Added the items');
+        //
     }
 
     /**

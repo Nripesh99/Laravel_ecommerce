@@ -47,6 +47,8 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'],function()
     Route::resource('carts', CartController::class);
     //Stock controller
     Route::resource('stocks', StockController::class);
+    // Route::get('stocks/create',[StockController::class, 'create'])->name('stocks.create');
+
     //productController
     Route::get('/products', [ProductController::class, 'index'])->name('products.index');
     Route::get('products/create',[ProductController::class, 'create'])->name('products.create');
@@ -61,3 +63,5 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'],function()
 });
 
 require __DIR__.'/auth.php';
+
+
