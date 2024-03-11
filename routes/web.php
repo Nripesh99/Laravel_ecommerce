@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StockController;
@@ -21,9 +22,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 //What would be seen when you first open the project
-Route::get('/', function () {
-    return view('ecommerce.index');
-});
+/*
+|Frontend for the user's
+*/
+
+Route::get('/',[FrontendController::class,'index'])->name('frontend.index');
+
 
 Route::get('/dashboard', function () {
     return view('ecommerce.index');
@@ -65,3 +69,16 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'],function()
 require __DIR__.'/auth.php';
 
 
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::middleware('auth')->group(function () {
+    Route::view('about', 'about')->name('about');
+
+    Route::get('users', [\App\Http\Controllers\UserController::class, 'index'])->name('users.index');
+
+    Route::get('profile', [\App\Http\Controllers\ProfileController::class, 'show'])->name('profile.show');
+    Route::put('profile', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
+});

@@ -1,52 +1,104 @@
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <title>{{ config('app.name', 'Laravel') }}</title>
+
+    <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css"
-        integrity="sha512-dPXYcDub/aeb08c63jRq/k6GaKccl256JQy/AnOq7CAnEZ9FzSL9wSbcZkMp4R26vBsMLFYH4kQ67/bbV8XaCQ=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-    <link rel="stylesheet" type="text/css" href="{{ url('/css/style.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ url('/css/hoverbuttons.css') }}" />
-    <!--Toastr link -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
-    </script>
-    {{-- <!--MDB link -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.1.0/mdb.min.css" rel="stylesheet" />
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.1.0/mdb.umd.min.js"></script> --}}
-
-    @yield('style')
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{{ asset('css/fontawesome.min.css') }}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{{ asset('css/adminlte.min.css') }}">
+    @yield('styles')
 </head>
-@include('layouts.navigation2')
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
 
-@if ($errors->any())
-    <div class="container mt-5">
+    <!-- Navbar -->
+    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+        <!-- Left navbar links -->
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+            </li>
+        </ul>
 
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
+        <!-- Right navbar links -->
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item dropdown">
+                <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="false">
+                    {{ Auth::user()->name }}
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" style="left: inherit; right: 0px;">
+                    <a href="{{ route('profile.show') }}" class="dropdown-item">
+                        <i class="mr-2 fas fa-file"></i>
+                        {{ __('My profile') }}
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <a href="{{ route('logout') }}" class="dropdown-item"
+                           onclick="event.preventDefault(); this.closest('form').submit();">
+                            <i class="mr-2 fas fa-sign-out-alt"></i>
+                            {{ __('Log Out') }}
+                        </a>
+                    </form>
+                </div>
+            </li>
+        </ul>
+    </nav>
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+        <!-- Brand Logo -->
+        <a href="/" class="brand-link">
+            <img src="{{ asset('images/AdminLTELogo.png') }}" alt="AdminLTE Logo"
+                 class="brand-image img-circle elevation-3"
+                 style="opacity: .8">
+            <span class="brand-text font-weight-light">AdminLTE 3</span>
+        </a>
+
+        @include('layouts.navigation')
+    </aside>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        @yield('content')
     </div>
-@endif
-<div class="mt-5">
-    @include('flash-message')
-</div>
-<div class="mt-5">
+    <!-- /.content-wrapper -->
 
-    @yield('content')
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+        <!-- Control sidebar content goes here -->
+        <div class="p-3">
+            <h5>Title</h5>
+            <p>Sidebar content</p>
+        </div>
+    </aside>
+    <!-- /.control-sidebar -->
+
+    <!-- Main Footer -->
+    <footer class="main-footer">
+        <!-- To the right -->
+        <div class="float-right d-none d-sm-inline">
+            Anything you want
+        </div>
+        <!-- Default to the left -->
+        <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
+    </footer>
 </div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+
+@vite('resources/js/app.js')
+<!-- AdminLTE App -->
+<script src="{{ asset('js/adminlte.min.js') }}" defer></script>
+
+@yield('scripts')
+</body>
+</html>
