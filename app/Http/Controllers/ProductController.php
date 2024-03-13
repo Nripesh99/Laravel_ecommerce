@@ -14,7 +14,8 @@ class ProductController extends Controller
     {
 
         $product = Product::all();
-        return view('products.index', ['products', $product]);
+        
+        return view('products.index', compact('product'));
     }
     public function create()
     {

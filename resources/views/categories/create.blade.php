@@ -1,5 +1,24 @@
-@extends('layouts.adminnavigation')
+@extends('layouts.app')
 @section('content')
+<style>
+    #form{
+   margin: auto; 
+   width: 50%; 
+   height: 50%;
+    }
+</style>
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6"></div>
+            <div class="col-sm-6">
+                <div class="breadcrumb float-sm-right">
+                    {{ Breadcrumbs::render('category.create') }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
    <div class="container mt-5">
     <div class="text-center p-4">
         <div class="border p-4 rounded shadow">

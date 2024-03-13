@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
@@ -29,9 +30,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/',[FrontendController::class,'index'])->name('frontend.index');
 
 
-Route::get('/dashboard', function () {
-    return view('ecommerce.index');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard',[FrontendController::class,'index'])->name('frontend.index')->middleware(['auth', 'verified'])->name('dashboard');
 
 //Auth controller
 Route::middleware('auth')->group(function () {
@@ -41,9 +40,9 @@ Route::middleware('auth')->group(function () {
 });
 Route::group(['prefix' => 'admin','middleware' => 'auth'],function()
 {
-  Route::get('/', function () {
-    return view('admin.index');
-});
+    Route::get('/',[AdminController::class, 'index'])->name('admin.index');
+
+    //usercontroller
       
     //Categories controller
     Route::resource('categories', CategoryController::class);
@@ -66,7 +65,7 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'],function()
 
 });
 
-require __DIR__.'/auth.php';
+
 
 
 
@@ -82,3 +81,5 @@ Route::middleware('auth')->group(function () {
     Route::get('profile', [\App\Http\Controllers\ProfileController::class, 'show'])->name('profile.show');
     Route::put('profile', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
 });
+
+require __DIR__.'/auth.php';

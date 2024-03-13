@@ -1,13 +1,25 @@
-@extends('layouts.adminnavigation')
+@extends('layouts.app')
 <style>
-     #form{
-    margin: auto; 
-    width: 50%; 
-    padding:10px;
-     }
+    #form{
+   margin: auto; 
+   width: 50%; 
+   padding:10px;
+    }
 </style>
-
 @section('content')
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6"></div>
+            <div class="col-sm-6">
+                <div class="breadcrumb float-sm-right">
+                    {{ Breadcrumbs::render('stock.create') }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="container mt-5">
     <form id='form' class="border p-4 rounded shadow" action="{{ route('stocks.store') }}" method="post" >
         @csrf

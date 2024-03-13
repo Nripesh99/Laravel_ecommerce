@@ -3,20 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Order;
 use App\Models\Product;
+use App\Models\Stock;
+use App\Models\User;
 use Illuminate\Http\Request;
 
-class FrontendController extends Controller
+class AdminController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $product=Product::all();
-        $category=Category::all()->where('parent_id', null);
-        return view('ecommerce.index',compact('product', 'category'));
+        $productCount = Product::count('id');
+        $userCount=User::count('id');
+        $categoryCount=Category::count('id');
+        $stockCount=Stock::count('id');
+        $orderCount=Order::count('id');
+        return view('admin.index', compact('productCount', 'userCount','categoryCount','stockCount','orderCount'));
     }
+    
 
     /**
      * Show the form for creating a new resource.
