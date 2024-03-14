@@ -18,6 +18,7 @@ class FrontendController extends Controller
         return view('ecommerce.index',compact('product', 'category'));
     }
 
+   
     /**
      * Show the form for creating a new resource.
      */
@@ -39,7 +40,8 @@ class FrontendController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $product=Product::find($id);
+        return view('ecommerce.detail', compact('product'));
     }
 
     /**

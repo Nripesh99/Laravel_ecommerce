@@ -57,13 +57,11 @@
                 </ul>
             </div>
     @endif
+    {{-- @include('layouts.navigation2'); --}}
     <div class="mt-5">
         @include('flash-message')
     </div>
-    <div class="mt-5">
-
-        @yield('content')
-    </div>
+    @yield('content')
     <!--script-->
     <script src="{{ asset('js/main.js') }}" defer></script>
     @yield('scripts')

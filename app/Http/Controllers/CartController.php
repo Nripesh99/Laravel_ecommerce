@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\Category;
 use App\Models\Stock;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
@@ -14,8 +15,8 @@ class CartController extends Controller
      */
     public function index()
     {
-        $cart=Cart::all();
-        return view('carts.index',['carts'=>$cart]);
+        $cart = Cart::all();
+        return view('carts.index', ['carts' => $cart]);
 
     }
 
@@ -37,17 +38,42 @@ class CartController extends Controller
             'product_id' => 'required|exists:products,id',
             'quantity' => 'required|integer|min:1',
         ]);
-        $cart = new Cart;
-        $actualQuantity=Stock::where('product_id',$request->product_id);
-        if($actualQuantity<=0){
-            return back()->with('error', 'no stock present');
+
+        // Find whether the product already exists in the cart
+        $existingProduct = Cart::where('product_id', $request->input('product_id'))
+            ->where('user_id', $request->input('user_id'))
+            ->first();
+
+        // Find whether the user already exists
+        $existingPerson = User::find($request->input('user_id'));
+
+        if ($existingProduct && $existingPerson) {
+            $cart = $existingProduct;
+            $actualQuantity = Stock::where('product_id', $request->product_id)->first();
+
+            if ($actualQuantity->quantity <= 0) {
+                return back()->with('error', 'No stock present');
+            }
+
+            $cart->quantity += $request->input('quantity');
+            $cart->save();
+            return back()->with('success', 'Added to cart');
+        } else {
+            $cart = new Cart;
+            $actualQuantity = Stock::where('product_id', $request->product_id)->first();
+
+            if ($actualQuantity->quantity <= 0) {
+                return back()->with('error', 'No stock present');
+            }
+
+            $cart->user_id = $request->input('user_id');
+            $cart->product_id = $request->input('product_id');
+            $cart->quantity += $request->input('quantity');
+            $cart->save();
+            return back()->with('success', 'Added to cart');
         }
-        $cart->user_id=$request->input('user_id');
-        $cart->product_id=$request->input('product_id');
-        $cart->quantity=$request->input('quantity');
-        $cart->save();
-        return back()->with('success','Added to cart');
     }
+
 
     /**
      * Display the specified resource.
@@ -62,7 +88,7 @@ class CartController extends Controller
      */
     public function edit(Cart $cart)
     {
-        return view('carts.edit',['carts',$cart]);
+        return view('carts.edit', ['carts', $cart]);
     }
 
     /**
@@ -73,9 +99,9 @@ class CartController extends Controller
         $request->validate([
             'quantity' => 'required|integer|min:1',
         ]);
-        
-        $cart= Cart::findOrFail($cart->id);
-        $cart->quantity=$request->input('quantity');
+
+        $cart = Cart::findOrFail($cart->id);
+        $cart->quantity = $request->input('quantity');
         $cart->save();
     }
 
@@ -84,7 +110,7 @@ class CartController extends Controller
      */
     public function destroy(string $id)
     {
-        $cart =Cart::findOrFail($id);
+        $cart = Cart::findOrFail($id);
         $cart->delete();
         return redirect()->back()->with('error', 'deleted succesfully');
     }

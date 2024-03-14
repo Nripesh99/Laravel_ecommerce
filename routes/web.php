@@ -28,7 +28,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/',[FrontendController::class,'index'])->name('frontend.index');
+Route::get('/ecommerce/{product}',[FrontendController::class,'show'])->name('detail.show');
 
+//Cart controller
+Route::resource('carts', CartController::class)->names([
+    'store' => 'carts.store',
+]);
 
 Route::get('/dashboard',[FrontendController::class,'index'])->name('frontend.index')->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -46,8 +51,7 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'],function()
       
     //Categories controller
     Route::resource('categories', CategoryController::class);
-    //Cart controller
-    Route::resource('carts', CartController::class);
+    
     //Stock controller
     Route::resource('stocks', StockController::class);
     // Route::get('stocks/create',[StockController::class, 'create'])->name('stocks.create');

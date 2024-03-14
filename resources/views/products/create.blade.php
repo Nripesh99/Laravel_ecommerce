@@ -13,7 +13,7 @@
         </div>
     </div>
 </div>
-<div class="container mt-5">
+<div class="container-fluid">
     <form id='form' class="border p-4 rounded shadow" action="{{ route('products.store') }}" method="post"
         enctype="multipart/form-data">
         @csrf
@@ -39,6 +39,10 @@
         <div class="mb-3">
             <label for="product_name" class="form-label">Product Name:</label>
             <input type="text" class="form-control" name="product_name" id="product_name" required>
+        </div>
+        <div class="mb-3">
+            <label for="product_name" class="form-label">Product Price:</label>
+            <input type="text" class="form-control" name="price" id="price" required>
         </div>
 
         <div class="mb-3">

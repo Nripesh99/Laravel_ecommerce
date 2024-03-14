@@ -28,6 +28,7 @@ class ProductController extends Controller
             'product_name' => 'required|string|max:255',
             'category' => 'required|string',
             'subCategory' => 'nullable|string',
+            'price'=>'required|integer',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'SKU' => 'required|unique:products,SKU|string|max:255',
             'product_description' => 'required|string',
@@ -41,13 +42,15 @@ class ProductController extends Controller
         }
         $addProduct = new Product;
         $addProduct->name = $request->input('product_name');
+        $addProduct->price = $request->input('price');  
         $addProduct->user_id = auth()->id();
         $addProduct->category_id = $request->filled('subCategory') ? $request->input('subCategory') : $request->input('category');
         $addProduct->image = $profileImage; // Assign the file name, not the input value
         $addProduct->SKU = $request->input('SKU');
         $addProduct->product_description = $request->input('product_description');
         $addProduct->save();
-        return redirect()->route('products.show', ['product' => $addProduct->id]);
+        // return redirect()->route('products.show', ['product' => $addProduct->id]);
+        return back()->with('success', 'added product succesfully');
     }
     public function show(){
 
