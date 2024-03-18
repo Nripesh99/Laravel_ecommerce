@@ -33,7 +33,7 @@ Route::get('/ecommerce/{product}',[FrontendController::class,'show'])->name('det
 //Cart controller
 Route::resource('carts', CartController::class)->names([
     'store' => 'carts.store',
-]);
+]);  
 
 Route::get('/dashboard',[FrontendController::class,'index'])->name('frontend.index')->middleware(['auth', 'verified'])->name('dashboard');
 

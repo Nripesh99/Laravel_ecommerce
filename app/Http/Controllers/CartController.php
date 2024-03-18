@@ -15,8 +15,9 @@ class CartController extends Controller
      */
     public function index()
     {
+        $category=Category::all();
         $cart = Cart::all();
-        return view('carts.index', ['carts' => $cart]);
+        return view('carts.index', ['carts' => $cart], ['category' => $category]);
 
     }
 
@@ -80,9 +81,15 @@ class CartController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $cart=Cart::all()->where('user_id', $id);
+        $category=Category::all();
+        return view('ecommerce.cart', compact('cart','category'));
     }
-
+    public function checkout(string $id)
+    {
+        $cart=Cart::all()->where('user_id', $id);
+        return view('ecommerce.checkout', compact('cart'));
+    }
     /**
      * Show the form for editing the specified resource.
      */

@@ -13,6 +13,7 @@ return new class extends Migration
     {
 
         Schema::table('carts', function (Blueprint $table) {
+
             $table->foreignId('product_id')->references('id')->on('products');
         });
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -41,7 +42,13 @@ class FrontendController extends Controller
     public function show(string $id)
     {
         $product=Product::find($id);
-        return view('ecommerce.detail', compact('product'));
+        $allProduct=Product::all();
+        return view('ecommerce.detail', compact('product', 'allProduct'));
+    }
+    public function cartShow(){
+        $id=auth()->id();
+        $cart=Cart::all()->where('user_id', $id);
+        return view('ecommerce.cart',compact('cart'));
     }
 
     /**
