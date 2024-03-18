@@ -224,7 +224,7 @@
                             <h5 class="font-weight-bold" >Total</h5>
                             <h5 class="font-weight-bold"id='totalamt'>$160</h5>
                         </div>
-                        <a href="{{route('')}}" class="btn btn-block btn-primary my-3 py-3">
+                        <a href="{{route('frontend.checkout',['detail'=>auth()->id()])}}" class="btn btn-block btn-primary my-3 py-3">
                             Proceed To Checkout
                         </a>
 

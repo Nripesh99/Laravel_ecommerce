@@ -85,11 +85,7 @@ class CartController extends Controller
         $category=Category::all();
         return view('ecommerce.cart', compact('cart','category'));
     }
-    public function checkout(string $id)
-    {
-        $cart=Cart::all()->where('user_id', $id);
-        return view('ecommerce.checkout', compact('cart'));
-    }
+ 
     /**
      * Show the form for editing the specified resource.
      */

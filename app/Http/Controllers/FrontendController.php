@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class FrontendController extends Controller
@@ -18,7 +19,12 @@ class FrontendController extends Controller
         $category=Category::all()->where('parent_id', null);
         return view('ecommerce.index',compact('product', 'category'));
     }
-
+    public function checkout(string $id)
+    {
+        $cart=Cart::all()->where('user_id', $id);
+        $user=User::find(auth()->id());
+        return view('ecommerce.checkout', compact('cart','user'));
+    }
    
     /**
      * Show the form for creating a new resource.

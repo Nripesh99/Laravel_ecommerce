@@ -1,5 +1,8 @@
+@extends('layouts.app2')
+@section('content')
+<!-- Topbar Start -->
 
-    <!-- Topbar Start -->
+<!--If person address exists show the address as readonly other wise don;t show the other address button  --> 
     <div class="container-fluid">
         <div class="row bg-secondary py-2 px-xl-5">
             <div class="col-lg-6 d-none d-lg-block">
@@ -141,7 +144,6 @@
     </div>
     <!-- Page Header End -->
 
-
     <!-- Checkout Start -->
     <div class="container-fluid pt-5">
         <div class="row px-xl-5">
@@ -151,15 +153,16 @@
                     <div class="row">
                         <div class="col-md-6 form-group">
                             <label>First Name</label>
-                            <input class="form-control" type="text" placeholder="John">
+                            <input class="form-control" type="text" value="{{ trim(explode(' ', $user->name)[0]) }}" readonly>
                         </div>
                         <div class="col-md-6 form-group">
                             <label>Last Name</label>
-                            <input class="form-control" type="text" placeholder="Doe">
+                            
+                            <input class="form-control" type="text" value="{{ trim(explode(' ', $user->name)[1]) }}" readonly>
                         </div>
                         <div class="col-md-6 form-group">
                             <label>E-mail</label>
-                            <input class="form-control" type="text" placeholder="example@email.com">
+                            <input class="form-control" type="text" value="{{$user->email}}" readonly>
                         </div>
                         <div class="col-md-6 form-group">
                             <label>Mobile No</label>
@@ -265,18 +268,14 @@
                     </div>
                     <div class="card-body">
                         <h5 class="font-weight-medium mb-3">Products</h5>
+                        @foreach ($cart as $carts)
+                            
                         <div class="d-flex justify-content-between">
-                            <p>Colorful Stylish Shirt 1</p>
-                            <p>$150</p>
+                            <p>${{$carts->product->name}}</p>
+                            <p>${{$carts->product->price}}</p>
                         </div>
-                        <div class="d-flex justify-content-between">
-                            <p>Colorful Stylish Shirt 2</p>
-                            <p>$150</p>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <p>Colorful Stylish Shirt 3</p>
-                            <p>$150</p>
-                        </div>
+                        @endforeach
+                        
                         <hr class="mt-0">
                         <div class="d-flex justify-content-between mb-3 pt-1">
                             <h6 class="font-weight-medium">Subtotal</h6>
@@ -326,7 +325,7 @@
         </div>
     </div>
     <!-- Checkout End -->
-
+@endsection
 
    
 
