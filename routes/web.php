@@ -30,6 +30,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/',[FrontendController::class,'index'])->name('frontend.index');
 Route::get('/ecommerce/{product}',[FrontendController::class,'show'])->name('detail.show');
 Route::get('/ecommerce/details/{detail}',[FrontendController::class,'checkout'])->name('frontend.checkout');
+Route::post('/checkout',[FrontendController::class,'orderStore'])->name('frontend.orderStore');
 
 
 //Cart controller

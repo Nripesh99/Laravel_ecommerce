@@ -118,16 +118,14 @@
     <!-- Cart End -->
     <script>
 $(document).ready(function(){
-    var subtotal = 0; 
-
+    // var subtotal = 0; 
     $(document).on('click', '[id^="plus-btn_"]', function() {
         var cartId = $(this).attr('id').split('_')[1];
         var quantityInput = $('#quantity_' + cartId);
         var quantity = parseInt(quantityInput.val());
         var quantityForm =$('#quantitynew_' + cartId);
+      console.log(quantityInput.val(quantity));
         quantityForm.val(quantity);
-
-        quantityInput.val(quantity);
         
         updateTotalPrice(cartId);
     });
@@ -136,7 +134,7 @@ $(document).ready(function(){
     $(document).on('click', '[id^="minus-btn_"]', function() {
         var cartId = $(this).attr('id').split('_')[1];
         var quantityInput = $('#quantity_' + cartId);
-        var quantity = parseInt(quantityInput.val());
+        var quantity = parseInt(quantityInput.val());//taking the value
         var quantityForm =$('#quantitynew_' + cartId);
         quantityForm.val(quantity);
         if (quantity > 1) {
@@ -158,6 +156,8 @@ $(document).ready(function(){
 
     // Function to update the total price for a given row
     function updateTotalPrice(cartId) {
+        var subtotal = 0; 
+        var totalPrice =0
         var price = parseInt($('#price_' + cartId).text());
         var quantity = parseInt($('#quantity_' + cartId).val());
         var totalPrice = price * quantity;

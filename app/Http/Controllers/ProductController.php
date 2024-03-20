@@ -87,6 +87,7 @@ class ProductController extends Controller
         $product->save();
         return redirect()->route('products.create')->with('success', 'Product updated successfully');
     }
+    
     public function delete($blog)
     {
         $post = Product::find($blog);
