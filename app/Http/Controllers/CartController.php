@@ -62,7 +62,9 @@ class CartController extends Controller
         } else {
             $cart = new Cart;
             $actualQuantity = Stock::where('product_id', $request->product_id)->first();
-
+            if($actualQuantity === null){
+                return back()->with('error', 'No stock present');
+            }
             if ($actualQuantity->quantity <= 0) {
                 return back()->with('error', 'No stock present');
             }
@@ -102,10 +104,10 @@ class CartController extends Controller
         $request->validate([
             'quantity' => 'required|integer|min:1',
         ]);
-
         $cart = Cart::findOrFail($cart->id);
         $cart->quantity = $request->input('quantity');
         $cart->save();
+        return back()->with('success', 'cart updated');
     }
 
     /**

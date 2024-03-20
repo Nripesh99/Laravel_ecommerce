@@ -54,7 +54,11 @@
                 </ul>
             </div>
     @endif
-    @include('flash-message')
+    @if(request()->path() === '/')
+    @else
+    @include('layouts.navigation2')
+    @endif
+@include('flash-message')
     @yield('content')
     
     @include('layouts.footer')
