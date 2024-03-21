@@ -21,6 +21,19 @@ class FrontendController extends Controller
         $category=Category::all()->where('parent_id', null);
         return view('ecommerce.index',compact('product', 'category'));
     }
+    public function shop(int $page=1)
+    {
+        if ($page !== 1) {
+            $product = Product::all()->limit(10)->offset(($page - 1) * 9)->get();
+        } else {
+            $product = Product::paginate(9);
+        }
+        
+        $pageCount = ceil(Product::count() / 9);       
+        
+        $category=Category::all()->where('parent_id', null);
+        return view('ecommerce.shop',compact('product', 'category','pageCount'));  
+    }
     public function checkout(string $id)
     {
         $cart=Cart::all()->where('user_id', $id);
@@ -55,8 +68,7 @@ class FrontendController extends Controller
             $orderDetail->price = $orderDataItem->totalPrice / $orderDataItem->product_quantity;
             $orderDetail->save();
         }
-    
-        // Assuming you're deleting the cart here
+        //Deleting carts 
         $carts = Cart::where('user_id', auth()->id())->get();
         foreach($carts as $cart){
             $cart->delete();
@@ -88,6 +100,7 @@ class FrontendController extends Controller
     {
         $product=Product::find($id);
         $allProduct=Product::all();
+        
         return view('ecommerce.detail', compact('product', 'allProduct'));
     }
     public function cartShow(){

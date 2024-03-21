@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid" id='nav1'>
     <div class="row bg-secondary py-2 px-xl-5">
         <div class="col-lg-6 d-none d-lg-block">
             <div class="d-inline-flex align-items-center">
@@ -64,7 +64,7 @@
 
 
 <!-- Navbar Start -->
-<div class="container-fluid">
+<div class="container-fluid" id="nav2">
     <div class="row border-top px-xl-5">
         <div class="col-lg-3 d-none d-lg-block">
             <a class="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100"
@@ -108,7 +108,7 @@
                 <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                     <div class="navbar-nav mr-auto py-0">
                         <a href="index.html" class="nav-item nav-link">Home</a>
-                        <a href="shop.html" class="nav-item nav-link">Shop</a>
+                        <a href="{{route('frontend.shop')}}" class="nav-item nav-link">Shop</a>
                         <a href="detail.html" class="nav-item nav-link active">Shop Detail</a>
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>

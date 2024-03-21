@@ -59,8 +59,8 @@
     @include('layouts.navigation2')
     @endif
 @include('flash-message')
-    @yield('content')
-    
+
+@yield('content')    
     @include('layouts.footer')
 </body>
 </html>
