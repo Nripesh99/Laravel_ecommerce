@@ -1,39 +1,27 @@
 @extends('layouts.app2')
 <style>
-#nav1{
-  position: fixed; 
-  top: 0;
-  left: 0;
-  width: 100%;
-  background-color: #fff; /* Adjust as needed */
-  z-index: 1000; /* Ensure it's above other content */
-}
-#nav2{
-position: fixed; 
-  top: 118;
-  left: 0;
-  width: 100%;
-  background-color: #fff; /* Adjust as needed */
-  z-index: 1000; /* Ensure it's above other content */
-}
-#nav1{
-  margin-bottom: 3px;
-}
-#nav2{
-  padding-top: 5px;
-}
+    /*  */
 </style>
 @section('content')
-    <div class="container-fluid bg-secondary mb-5">
-        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
-            <h1 class="font-weight-semi-bold text-uppercase mb-3">Our Shop</h1>
-            <div class="d-inline-flex">
-                <p class="m-0"><a href="">Home</a></p>
-                <p class="m-0 px-2">-</p>
-                <p class="m-0">Shop</p>
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-2">
+            </div>
+            <div class="col-sm-4 text-end">
+            </div>
+            <div class="col-sm-6">
+                <div class="float-sm-right mx-5" style="background-color: white !important">
+                    <!-- Content goes here -->
+                    @if (Breadcrumbs::exists(Route::currentRouteName()))
+                        {{ Breadcrumbs::render(Route::currentRouteName()) }}
+                    @else
+                        {{ Route::currentRouteName() }}
+                    @endif
+                </div>
             </div>
         </div>
     </div>
+
     <!-- Page Header End -->
 
     <!-- Shop Start -->
@@ -48,7 +36,7 @@ position: fixed;
                         <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                             <input type="checkbox" class="custom-control-input" checked id="price-all" />
                             <label class="custom-control-label" for="price-all">All Price</label>
-                        <span class="badge border font-weight-normal">1000</span>
+                            <span class="badge border font-weight-normal"></span>
                         </div>
                         <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                             <input type="checkbox" class="custom-control-input" id="price-1" />
@@ -159,7 +147,7 @@ position: fixed;
 
             <!-- Shop Product Start -->
             <div class="col-lg-9 col-md-12">
-                <div class="row pb-3">
+                <div class='row pb-3'>
                     <div class="col-12 pb-1">
                         <div class="d-flex align-items-center justify-content-between mb-4">
                             <form action="">
@@ -185,40 +173,46 @@ position: fixed;
                             </div>
                         </div>
                     </div>
-                  
-                    @foreach($product as $products)
-                    <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
-                        <div class="card product-item border-0 mb-4">
-                          <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                            <img class="img-fluid w-100" src="{{ url('/images/' . $products->image) }}" alt=""
-                                style=" min-height:200px; max-height: 200px" />
-                        </div>  
-                            <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                                <h6 class="text-truncate mb-3">{{$products->name}}</h6>
-                                <div class="d-flex justify-content-center">
-                                    <h6>{{$products->price}}</h6>
+                </div>
+                <div class="row pb-3" id="productContainer">
+                    {{-- @foreach ($product as $products)
+                        <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
+                            <div class="card product-item border-0 mb-4">
+                                <div
+                                    class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                                    <img class="img-fluid w-100" src="{{ url('/images/' . $products->image) }}"
+                                        alt="" style=" min-height:200px; max-height: 200px" />
+                                </div>
+                                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                                    <h6 class="text-truncate mb-3">{{ $products->name }}</h6>
+                                    <div class="d-flex justify-content-center">
+                                        <h6>{{ $products->price }}</h6>
+                                    </div>
+                                </div>
+                                <div class="card-footer d-flex justify-content-between bg-light border">
+                                    <a href="{{ route('detail.show', ['product' => $products->id]) }}"
+                                        class="btn btn-sm text-dark p-0"><i
+                                            class="fas fa-eye text-primary mr-1"></i>ViewDetail</a>
+                                    <form action="{{ route('carts.store') }}" method="post">
+                                        @csrf
+                                        <input type="hidden" name="product_id" id="product_id"
+                                            value="{{ $products->id }}">
+                                        <input type="hidden" name="user_id" id="user_id" value="{{ auth()->id() }}">
+                                        <input type="hidden" name="quantity" id="quantity" value="1">
+                                        <button type="submit" class="btn btn-sm text-dark p-0">
+                                            <i class="fas fa-shopping-cart text-primary mr-1"></i>Add Cart
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
-                            <div class="card-footer d-flex justify-content-between bg-light border">
-                              <a href="{{ route('detail.show', ['product' => $products->id]) }}"
-                                  class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>ViewDetail</a>
-                              <form action="{{ route('carts.store') }}" method="post">
-                                  @csrf
-                                  <input type="hidden" name="product_id" id="product_id" value="{{ $products->id }}">
-                                  <input type="hidden" name="user_id" id="user_id" value="{{ auth()->id() }}">
-                                  <input type="hidden" name="quantity" id="quantity" value="1">
-                                  <button type="submit" class="btn btn-sm text-dark p-0">
-                                      <i class="fas fa-shopping-cart text-primary mr-1"></i>Add Cart
-                                  </button>
-                              </form>
-                          </div>
-                        </div>
-                    </div>
-                   @endforeach
-                    
-                    <div class="col-12 pb-1">
-                        @if ($pageCount > 0)
-                            
+                        </div> --}}
+                    {{-- @endforeach --}}
+
+                </div>
+
+
+                <div class="col-12 pb-1">
+                    @if ($pageCount > 0)
                         <nav aria-label="Page navigation">
                             <ul class="pagination justify-content-center mb-3">
                                 <li class="page-item disabled">
@@ -228,28 +222,97 @@ position: fixed;
                                     </a>
                                 </li>
                                 @php
-                                    $counter=1;
+                                    $counter = 1;
                                 @endphp
                                 @for ($i = 1; $i <= $pageCount; $i++)
-                                <li class="page-item ">
-                                    <a class="page-link" href="{{route('frontend.shop',['page'=>$counter])}}">{{$counter}}</a>
-                                </li>
-                                @php
-                                    $counter++;
-                                @endphp
+                                    <li class="page-item ">
+                                        {{-- <a class="page-link"
+                                            href="{{ route('frontend.shop', ['page' => $counter]) }}">{{ $counter }}</a> --}}
+                                        <a class="page-link">{{ $counter }}</a>
+                                    </li>
+                                    @php
+                                        $counter++;
+                                    @endphp
                                 @endfor
-                                    <a class="page-link" href="{{route('frontend.shop')}}" aria-label="Next">
-                                        <span aria-hidden="true">&raquo;</span>
-                                        <span class="sr-only">Next</span>
-                                    </a>
+                                <a class="page-link" href="{{ route('frontend.shop') }}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                    <span class="sr-only">Next</span>
+                                </a>
                                 </li>
                             </ul>
                         </nav>
-                        @endif
-                    </div>
+                    @endif
                 </div>
             </div>
-            <!-- Shop Product End -->
         </div>
+        <!-- Shop Product End -->
     </div>
-    <!-- Shop End -->
+    </div>
+    <script>
+        $(document).ready(function() {
+            $('.page-link:first').trigger('click');
+            $(document).on('click', '.page-link', function(e) {
+                e.preventDefault(); // Prevent default click behavior
+                var pagenumber = $(this).text(); // Extract page number from link text
+                console.log(pagenumber);
+                $.ajax({
+                    url: "{{ route('frontend.shopajax') }}",
+                    type: "GET",
+                    data: {
+                        page: pagenumber
+                    },
+                    dataType: "json",
+                    success: function(data) {
+                        // $('#productContainer').empty();
+                        // Iterate over each product and generate HTML
+                        console.log(typeof(data));//data is object
+                        console.log(data);
+                        const products = data.product;
+                        let combinedHtml = '';
+                        products.forEach(function(product) {
+                        combinedHtml += `
+                        <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
+                            <div class="card product-item border-0 mb-4">
+                                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                                    <img class="img-fluid w-100" src="/images/${product.image}" alt="" style="min-height:200px; max-height: 200px" />
+                                </div>
+                                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                                    <h6 class="text-truncate mb-3">${product.name}</h6>
+                                    <div class="d-flex justify-content-center">
+                                        <h6>${product.price}</h6>
+                                    </div>
+                                </div>
+                                <div class="card-footer d-flex justify-content-between bg-light border">
+                                    <a href="/ecommerce/${product.id}" class="btn btn-sm text-dark p-0">
+                                        <i class="fas fa-eye text-primary mr-1"></i>View Detail
+                                    </a>
+                                    <form action="{{route('carts.store')}}" method="post">
+                                        @csrf
+                                        <input type="hidden" name="product_id" value="${product.id}">
+                                        <input type="hidden" name="user_id" value="${product.user_id}">
+                                        <input type="hidden" name="quantity" value="1">
+                                        <button type="submit" class="btn btn-sm text-dark p-0">
+                                            <i class="fas fa-shopping-cart text-primary mr-1"></i>Add Cart
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                        });
+
+                        // Append the generated HTML to the product container
+                        $('#productContainer').html(combinedHtml);
+                    },
+                    error: function(xhr, status, error) {
+                        console.log("error", error);
+                        // Handle error if any
+                    }
+                });
+            });
+        });
+    </script>
+
+@endsection
+
+<!-- Shop End -->

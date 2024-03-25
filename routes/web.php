@@ -32,6 +32,8 @@ Route::get('/ecommerce/{product}',[FrontendController::class,'show'])->name('det
 Route::get('/ecommerce/details/{detail}',[FrontendController::class,'checkout'])->name('frontend.checkout');
 Route::post('/checkout',[FrontendController::class,'orderStore'])->name('frontend.orderStore');
 Route::get('/shop',[FrontendController::class, 'shop'])->name('frontend.shop');
+Route::get('/shopajax',[FrontendController::class, 'shopajax'])->name('frontend.shopajax');
+
 
 
 //Cart controller
@@ -77,7 +79,7 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'],function()
 
 
 
-Auth::routes();
+// Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
@@ -87,7 +89,7 @@ Route::middleware('auth')->group(function () {
     Route::get('users', [\App\Http\Controllers\UserController::class, 'index'])->name('users.index');
 
     Route::get('profile', [\App\Http\Controllers\ProfileController::class, 'show'])->name('profile.show');
-    Route::put('profile', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
+    // Route::put('profile', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
 });
 
 require __DIR__.'/auth.php';

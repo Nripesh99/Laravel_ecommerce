@@ -59,3 +59,25 @@ Breadcrumbs::for('stock.create', function (BreadcrumbTrail $trail) {
     $trail->parent('stock');
     $trail->push('create', route('stocks.create'));
 });
+
+//Ecommerce>>shop
+
+Breadcrumbs::for('frontend.shop', function (BreadcrumbTrail $trail) {
+    $trail->parent('ecommerce');
+    $trail->push('shop', route('frontend.shop'));
+});
+// Ecommerce
+Breadcrumbs::for('ecommerce', function (BreadcrumbTrail $trail) {
+    $trail->push('Ecommerce', route('frontend.index'));
+});
+
+//Ecommerce>>shop>>details
+Breadcrumbs::for('detail.show', function (BreadcrumbTrail $trail) { 
+    $trail->parent('frontend.shop');
+    $trail->push('Details','frontend.show');
+});
+//Ecommerce>>cart
+Breadcrumbs::for('carts.show', function (BreadcrumbTrail $trail){
+    $trail->parent('ecommerce');
+    $trail->push('cart', route('carts.show', ['cart' => auth()->id()]));
+});

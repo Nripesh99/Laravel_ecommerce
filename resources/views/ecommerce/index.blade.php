@@ -123,7 +123,7 @@
                     <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                         <div class="navbar-nav mr-auto py-0">
                             <a href="index.html" class="nav-item nav-link active">Home</a>
-                            <a href="{{route('frontend.shop')}}" class="nav-item nav-link">Shop</a>
+                            <a href="{{ route('frontend.shop') }}" class="nav-item nav-link">Shop</a>
                             <a href="detail.html" class="nav-item nav-link">Shop Detail</a>
                             <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
@@ -135,11 +135,38 @@
                             <a href="contact.html" class="nav-item nav-link">Contact</a>
                         </div>
                         <div class="navbar-nav ml-auto py-0">
-                            <a href="" class="nav-item nav-link">Login</a>
-                            <a href="" class="nav-item nav-link">Register</a>
+                            @guest
+                                @if (Route::has('login'))
+                                    <a class="nav-item nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                @endif
+                
+                                @if (Route::has('register'))
+                                    <a class="nav-item nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                @endif
+                            @else
+                                <div class="nav-item dropdown">
+                                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
+                                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                        {{ Auth::user()->name }}
+                                    </a>
+                
+                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="{{ route('logout') }}"
+                                            onclick="event.preventDefault();
+                                                        document.getElementById('logout-form').submit();">
+                                            {{ __('Logout') }}
+                                        </a>
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                            class="d-none">
+                                            @csrf
+                                        </form>
+                                    </div>
+                                </div>
+                            @endguest
                         </div>
                     </div>
                 </nav>
+                
                 <div id="header-carousel" class="carousel slide" data-ride="carousel">
                     <div class="carousel-inner">
                         <div class="carousel-item active" style="height: 410px">
@@ -432,29 +459,20 @@
             <div class="col">
                 <div class="owl-carousel vendor-carousel">
                     <div class="vendor-item border p-4">
-                        <img src="img/vendor-1.jpg" alt="2" />
+                        <img src="{{ url('/images/' . 'vendor-1.jpg') }}" alt="2" />
                     </div>
                     <div class="vendor-item border p-4">
-                        <img src="img/vendor-2.jpg" alt="2" />
+                        <img src="{{ url('/images/' . 'vendor-2.jpg') }}" alt="2" />
                     </div>
                     <div class="vendor-item border p-4">
-                        <img src="img/vendor-3.jpg" alt="2" />
+                        <img src="{{ url('/images/' . 'vendor-3.jpg') }}" alt="2" />
                     </div>
                     <div class="vendor-item border p-4">
-                        <img src="img/vendor-4.jpg" alt="2" />
+                        <img src="{{ url('/images/' . 'vendor-4.jpg') }}" alt="2" />
                     </div>
                     <div class="vendor-item border p-4">
-                        <img src="img/vendor-5.jpg" alt="2" />
-                    </div>
-                    <div class="vendor-item border p-4">
-                        <img src="img/vendor-6.jpg" alt="2" />
-                    </div>
-                    <div class="vendor-item border p-4">
-                        <img src="img/vendor-7.jpg" alt="2" />
-                    </div>
-                    <div class="vendor-item border p-4">
-                        <img src="img/vendor-8.jpg" alt="2" />
-                    </div>
+                        <img src="{{ url('/images/' . 'vendor-5.jpg') }}" alt="2" />
+                    </div>   
                 </div>
             </div>
         </div>

@@ -19,7 +19,8 @@ class FrontendController extends Controller
     {
         $product=Product::all();
         $category=Category::all()->where('parent_id', null);
-        return view('ecommerce.index',compact('product', 'category'));
+        $cartCount=Cart::all()->count();
+        return view('ecommerce.index',compact('product', 'category','cartCount'));
     }
     public function shop(int $page=1)
     {
@@ -34,11 +35,36 @@ class FrontendController extends Controller
         $category=Category::all()->where('parent_id', null);
         return view('ecommerce.shop',compact('product', 'category','pageCount'));  
     }
+    public function shopajax(Request $request){
+        $page = $request->page ?? 1;
+        if ($page !== 1) {
+            $products = Product::limit(9)->offset(($page - 1) * 9)->get();
+        } else {
+            $products = Product::paginate(9);
+        }
+
+
+        $category=Category::all()->where('parent_id', null);
+
+        
+        $pageCount = ceil(Product::count() / 9);       
+        
+        $data = [
+            'product' => $products,
+            'category' => $category,
+            'pageCount' => $pageCount
+        ];
+    
+        return response()->json($data);
+    }
+    
     public function checkout(string $id)
     {
         $cart=Cart::all()->where('user_id', $id);
         $user=User::find(auth()->id());
-        return view('ecommerce.checkout', compact('cart','user'));
+        $category=Category::all()->where('parent_id', null);
+
+        return view('ecommerce.checkout', compact('cart','user', 'category'));
     }
     public function orderStore(Request $request)
     {
@@ -100,16 +126,16 @@ class FrontendController extends Controller
     {
         $product=Product::find($id);
         $allProduct=Product::all();
+        $category=Category::all()->where('parent_id', null);
         
-        return view('ecommerce.detail', compact('product', 'allProduct'));
+        return view('ecommerce.detail', compact('product', 'allProduct','category'));
     }
+    
     public function cartShow(){
         $id=auth()->id();
         $cart=Cart::all()->where('user_id', $id);
         return view('ecommerce.cart',compact('cart'));
     }
-
-    
 
     /**
      * Show the form for editing the specified resource.

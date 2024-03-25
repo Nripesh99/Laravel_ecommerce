@@ -47,7 +47,8 @@ class OrderController extends Controller
     public function show(string $id)
     {
         $order=Order::findOrFail($id);
-        return view('orders.show', ['order'=> $order]);
+        $category=Category::all()->where('parent_id',null)->get();
+        return view('orders.show', ['order'=> $order],['category'=>$category]);
     }
 
     /**
