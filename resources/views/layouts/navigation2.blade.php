@@ -37,33 +37,36 @@
             </a>
         </div>
         <div class="col-lg-6 col-6 text-left">
-            <form action="">
+            <form id="searchForm" action="{{ route('frontend.search') }}" method="get">
+                @csrf
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search for products">
+                    <input id="searchInput" type="text" class="form-control" placeholder="Search for products" name="search">
                     <div class="input-group-append">
-                        <span class="input-group-text bg-transparent text-primary">
+                        <button id="searchButton" class="btn btn-primary" type="button">
                             <i class="fa fa-search"></i>
-                        </span>
+                        </button>
                     </div>
                 </div>
             </form>
         </div>
+        
+        
         <div class="col-lg-3 col-6 text-right">
             <a href="" class="btn border">
                 <i class="fas fa-heart text-primary"></i>
                 <span class="badge">0</span>
             </a>
             @auth
-            <a href="{{ route('carts.show', ['cart' => auth()->id()]) }}" class="btn border">
-                <i class="fas fa-shopping-cart text-primary"></i>
-                <span class="badge">0</span>
-            </a>
+                <a href="{{ route('carts.show', ['cart' => auth()->id()]) }}" class="btn border">
+                    <i class="fas fa-shopping-cart text-primary"></i>
+                    <span class="badge">0</span>
+                </a>
             @endauth
             @guest
-            <a href="{{ route('login') }}" class="btn border">
-                <i class="fas fa-shopping-cart text-primary"></i>
-                <span class="badge">0</span>
-            </a>
+                <a href="{{ route('login') }}" class="btn border">
+                    <i class="fas fa-shopping-cart text-primary"></i>
+                    <span class="badge">0</span>
+                </a>
             @endguest
         </div>
     </div>
@@ -124,10 +127,11 @@
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
                             <div class="dropdown-menu rounded-0 m-0">
                                 @auth
-                                <a href="{{ route('carts.show', ['cart' => auth()->id()]) }} " class="dropdown-item">Shopping Cart</a>
+                                    <a href="{{ route('carts.show', ['cart' => auth()->id()]) }} "
+                                        class="dropdown-item">Shopping Cart</a>
                                 @endauth
                                 @guest
-                                <a href="{{ route('login')}} " class="dropdown-item">Shopping Cart</a>
+                                    <a href="{{ route('login') }} " class="dropdown-item">Shopping Cart</a>
 
                                 @endguest
                                 <a href="checkout.html" class="dropdown-item">Checkout</a>
@@ -149,23 +153,22 @@
                                 </li>
                             @endif
                         @else
-                        <div class="nav-item dropdown">
-                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
-                                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
-                                </a>
-
+                            <div class="nav-item dropdown">
+                                @auth
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                                    {{ Auth::user()->name }}</a>
                                 <div class="dropdown-menu rounded-0 m-0">
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                         onclick="event.preventDefault();
-                                                 document.getElementById('logout-form').submit();">
+                                         document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
-
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST"
                                         class="d-none">
                                         @csrf
                                     </form>
+                                </div>
+                             @endauth
                                 </div>
                             </div>
                         @endguest
@@ -175,3 +178,6 @@
         </div>
     </div>
 </div>
+<script>
+</script>
+

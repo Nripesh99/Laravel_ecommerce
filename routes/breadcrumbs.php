@@ -81,3 +81,7 @@ Breadcrumbs::for('carts.show', function (BreadcrumbTrail $trail){
     $trail->parent('ecommerce');
     $trail->push('cart', route('carts.show', ['cart' => auth()->id()]));
 });
+Breadcrumbs::for('frontend.search', function (BreadcrumbTrail $trail){
+    $trail->parent('frontend.shop');
+    $trail->push('Search', route('frontend.shop'));
+});

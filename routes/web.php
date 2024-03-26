@@ -33,6 +33,7 @@ Route::get('/ecommerce/details/{detail}',[FrontendController::class,'checkout'])
 Route::post('/checkout',[FrontendController::class,'orderStore'])->name('frontend.orderStore');
 Route::get('/shop',[FrontendController::class, 'shop'])->name('frontend.shop');
 Route::get('/shopajax',[FrontendController::class, 'shopajax'])->name('frontend.shopajax');
+Route::get('/search', [FrontendController::class, 'search'])->name('frontend.search');
 
 
 

@@ -174,11 +174,39 @@
                         </div>
                     </div>
                 </div>
-                <div class="row pb-3" id="productContainer"><!--Product is inside this -->
+                <div class="row pb-3" id="productContainer">
+                    @foreach ($product as $product)
+                    <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
+                        <div class="card product-item border-0 mb-4">
+                            <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                                <img class="img-fluid w-100" src="/images/{{ $product->image }}" alt="" style="min-height:200px; max-height: 200px" />
+                            </div>
+                            <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                                <h6 class="text-truncate mb-3">{{ $product->name }}</h6>
+                                <div class="d-flex justify-content-center">
+                                    <h6>{{ $product->price }}</h6>
+                                </div>
+                            </div>
+                            <div class="card-footer d-flex justify-content-between bg-light border">
+                                <a href="/ecommerce/{{ $product->id }}" class="btn btn-sm text-dark p-0">
+                                    <i class="fas fa-eye text-primary mr-1"></i>View Detail
+                                </a>
+                                <form action="{{ route('carts.store') }}" method="post">
+                                    @csrf
+                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                    <input type="hidden" name="user_id" value="{{ $product->user_id }}">
+                                    <input type="hidden" name="quantity" value="1">
+                                    <button type="submit" class="btn btn-sm text-dark p-0">
+                                        <i class="fas fa-shopping-cart text-primary mr-1"></i>Add Cart
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
                 </div>
-
-
-                <div class="col-12 pb-1" id="pagenavigation">
+    
+                <div class="col-12 pb-1">
                     @if ($pageCount > 0)
                         <nav aria-label="Page navigation">
                             <ul class="pagination justify-content-center mb-3">
@@ -193,15 +221,14 @@
                                 @endphp
                                 @for ($i = 1; $i <= $pageCount; $i++)
                                     <li class="page-item ">
-                                        {{-- <a class="page-link"
-                                            href="{{ route('frontend.shop', ['page' => $counter]) }}">{{ $counter }}</a> --}}
-                                        <a class="page-link">{{ $counter }}</a>
+                                        <a class="page-link"
+                                            href="{{ route('frontend.search', ['page' => $counter]) }}">{{ $counter }}</a>
                                     </li>
                                     @php
                                         $counter++;
                                     @endphp
                                 @endfor
-                                <a class="page-link" href="{{ route('frontend.shop') }}" aria-label="Next">
+                                <a class="page-link" href="{{ route('frontend.search') }}" aria-label="Next">
                                     <span aria-hidden="true">&raquo;</span>
                                     <span class="sr-only">Next</span>
                                 </a>
@@ -216,72 +243,65 @@
     </div>
     </div>
     <script>
-       $(document).ready(function() {
-    function loadProducts(pageNumber) {
-        $.ajax({
-            url: "{{ route('frontend.shopajax') }}",
-            type: "GET",
-            data: {
-                page: pageNumber
-            },
-            dataType: "json",
-            success: function(data) {
-                const products = data.product;
-                let combinedHtml = '';
-                products.forEach(function(product) {
-                    combinedHtml += `
-                        <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
-                            <div class="card product-item border-0 mb-4">
-                                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                                    <img class="img-fluid w-100" src="/images/${product.image}" alt="" style="min-height:200px; max-height: 200px" />
-                                </div>
-                                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                                    <h6 class="text-truncate mb-3">${product.name}</h6>
-                                    <div class="d-flex justify-content-center">
-                                        <h6>${product.price}</h6>
-                                    </div>
-                                </div>
-                                <div class="card-footer d-flex justify-content-between bg-light border">
-                                    <a href="/ecommerce/${product.id}" class="btn btn-sm text-dark p-0">
-                                        <i class="fas fa-eye text-primary mr-1"></i>View Detail
-                                    </a>
-                                    <form action="{{route('carts.store')}}" method="post">
-                                        @csrf
-                                        <input type="hidden" name="product_id" value="${product.id}">
-                                        <input type="hidden" name="user_id" value="${product.user_id}">
-                                        <input type="hidden" name="quantity" value="1">
-                                        <button type="submit" class="btn btn-sm text-dark p-0">
-                                            <i class="fas fa-shopping-cart text-primary mr-1"></i>Add Cart
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
+        // $(document).ready(function() {
+        //     function searchProducts(searchQuery) {
+        //         $.ajax({
+        //             url: "{{ route('frontend.search') }}",
+        //             type: "POST",
+        //             data: {
+        //                 search: searchQuery,
+        //                 _token: $('input[name="_token"]').val()
+        //             },
+        //             dataType: "json",
+        //             success: function(data) {
+        //                 const products = data.product;
+        //                 let combinedHtml = '';
+        //                 products.forEach(function(product) {
+        //                     combinedHtml += `
+        //                 <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
+        //                     <div class="card product-item border-0 mb-4">
+        //                         <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+        //                             <img class="img-fluid w-100" src="/images/${product.image}" alt="" style="min-height:200px; max-height: 200px" />
+        //                         </div>
+        //                         <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+        //                             <h6 class="text-truncate mb-3">${product.name}</h6>
+        //                             <div class="d-flex justify-content-center">
+        //                                 <h6>${product.price}</h6>
+        //                             </div>
+        //                         </div>
+        //                         <div class="card-footer d-flex justify-content-between bg-light border">
+        //                             <a href="/ecommerce/${product.id}" class="btn btn-sm text-dark p-0">
+        //                                 <i class="fas fa-eye text-primary mr-1"></i>View Detail
+        //                             </a>
+        //                             <form action="{{ route('carts.store') }}" method="post">
+        //                                 @csrf
+        //                                 <input type="hidden" name="product_id" value="${product.id}">
+        //                                 <input type="hidden" name="user_id" value="${product.user_id}">
+        //                                 <input type="hidden" name="quantity" value="1">
+        //                                 <button type="submit" class="btn btn-sm text-dark p-0">
+        //                                     <i class="fas fa-shopping-cart text-primary mr-1"></i>Add Cart
+        //                                 </button>
+        //                             </form>
+        //                         </div>
+        //                     </div>
+        //                 </div>
+        //                 `;
+        //                 });
 
-                $('#productContainer').html(combinedHtml);
-            },
-            error: function(xhr, status, error) {
-                console.log("error", error);
-                // Handle error if any
-            }
-        });
-    }
-  
+        //                 $('#productContainer').html(combinedHtml);
+        //             },
+        //             error: function(xhr, status, error) {
+        //                 console.error("Error searching products:", error);
+        //             }
+        //         });
+        //     }
+        //     $('#searchForm').submit(function(e) {
+        //         e.preventDefault(); // Prevent default form submission
+        //         var searchQuery = $('#searchInput').val(); // Get search query from input field
+        //         searchProducts(searchQuery); // Call function to search products
+        //     });
 
-    // Call the function with page number 1
-    loadProducts(1);
-
-    // Event listener for page links
-    $(document).on('click', '.page-link', function(e) {
-        e.preventDefault(); // Prevent default click behavior
-        var pageNumber = $(this).text(); // Extract page number from link text
-        loadProducts(pageNumber);
-    });
-
-});
-
+        // });
     </script>
 
 @endsection

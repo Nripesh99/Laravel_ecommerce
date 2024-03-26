@@ -41,13 +41,15 @@
                 </a>
             </div>
             <div class="col-lg-6 col-6 text-left">
-                <form action="">
+                <form id="searchForm" action="{{ route('frontend.search') }}" method="get">
+                    @csrf
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search for products" />
+                        <input id="searchInput" type="text" class="form-control" placeholder="Search for products"
+                            name="search">
                         <div class="input-group-append">
-                            <span class="input-group-text bg-transparent text-primary">
+                            <button id="searchButton" class="btn btn-primary" type="button">
                                 <i class="fa fa-search"></i>
-                            </span>
+                            </button>
                         </div>
                     </div>
                 </form>
@@ -58,18 +60,18 @@
                     <span class="badge">0</span>
                 </a>
                 @auth
-                <a href="{{ route('carts.show', ['cart' => auth()->id()]) }}" class="btn border">
-                    <i class="fas fa-shopping-cart text-primary"></i>
-                    <span class="badge">0</span>
-                </a> 
+                    <a href="{{ route('carts.show', ['cart' => auth()->id()]) }}" class="btn border">
+                        <i class="fas fa-shopping-cart text-primary"></i>
+                        <span class="badge">0</span>
+                    </a>
                 @endauth
                 @guest
-                <a href="{{ route('frontend.index') }}" class="btn border">
-                    <i class="fas fa-shopping-cart text-primary"></i>
-                    <span class="badge">0</span>
-                </a>
+                    <a href="{{ route('frontend.index') }}" class="btn border">
+                        <i class="fas fa-shopping-cart text-primary"></i>
+                        <span class="badge">0</span>
+                    </a>
                 @endguest
-                 
+
             </div>
         </div>
     </div>
@@ -122,7 +124,7 @@
                     </button>
                     <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                         <div class="navbar-nav mr-auto py-0">
-                            <a href="index.html" class="nav-item nav-link active">Home</a>
+                            <a href="{{ route('frontend.index') }}" class="nav-item nav-link active">Home</a>
                             <a href="{{ route('frontend.shop') }}" class="nav-item nav-link">Shop</a>
                             <a href="detail.html" class="nav-item nav-link">Shop Detail</a>
                             <div class="nav-item dropdown">
@@ -139,21 +141,19 @@
                                 @if (Route::has('login'))
                                     <a class="nav-item nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
                                 @endif
-                
+
                                 @if (Route::has('register'))
                                     <a class="nav-item nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
                                 @endif
                             @else
                                 <div class="nav-item dropdown">
-                                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
-                                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                        {{ Auth::user()->name }}
-                                    </a>
-                
-                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    @auth
+                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                                        {{ Auth::user()->name }}</a>
+                                    <div class="dropdown-menu rounded-0 m-0">
                                         <a class="dropdown-item" href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
-                                                        document.getElementById('logout-form').submit();">
+                                             document.getElementById('logout-form').submit();">
                                             {{ __('Logout') }}
                                         </a>
                                         <form id="logout-form" action="{{ route('logout') }}" method="POST"
@@ -161,12 +161,13 @@
                                             @csrf
                                         </form>
                                     </div>
+                                 @endauth
                                 </div>
                             @endguest
                         </div>
                     </div>
                 </nav>
-                
+
                 <div id="header-carousel" class="carousel slide" data-ride="carousel">
                     <div class="carousel-inner">
                         <div class="carousel-item active" style="height: 410px">
@@ -367,7 +368,8 @@
                         </div>
                         <div class="card-footer d-flex justify-content-between bg-light border">
                             <a href="{{ route('detail.show', ['product' => $products->id]) }}"
-                                class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>ViewDetail</a>
+                                class="btn btn-sm text-dark p-0"><i
+                                    class="fas fa-eye text-primary mr-1"></i>ViewDetail</a>
                             <form action="{{ route('carts.store') }}" method="post">
                                 @csrf
                                 <input type="hidden" name="product_id" id="product_id" value="{{ $products->id }}">
@@ -420,35 +422,36 @@
         </div>
         <div class="row px-xl-5 pb-3">
             @foreach ($product as $products)
-            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-                <div class="card product-item border-0 mb-4">
-                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="{{ url('/images/' . $products->image) }}" alt=""
-                            style=" min-height:200px; max-height: 200px" />
-                    </div>
-                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">{{ $products->name }}</h6>
-                        <div class="d-flex justify-content-center">
-                            <h6>Rs. {{ $products->price }}</h6>
-                            <h6 class="text-muted ml-2"></h6>
+                <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                    <div class="card product-item border-0 mb-4">
+                        <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                            <img class="img-fluid w-100" src="{{ url('/images/' . $products->image) }}" alt=""
+                                style=" min-height:200px; max-height: 200px" />
+                        </div>
+                        <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                            <h6 class="text-truncate mb-3">{{ $products->name }}</h6>
+                            <div class="d-flex justify-content-center">
+                                <h6>Rs. {{ $products->price }}</h6>
+                                <h6 class="text-muted ml-2"></h6>
+                            </div>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between bg-light border">
+                            <a href="{{ route('detail.show', ['product' => $products->id]) }}"
+                                class="btn btn-sm text-dark p-0"><i
+                                    class="fas fa-eye text-primary mr-1"></i>ViewDetail</a>
+                            <form action="{{ route('carts.store') }}" method="post">
+                                @csrf
+                                <input type="hidden" name="product_id" id="product_id" value="{{ $products->id }}">
+                                <input type="hidden" name="user_id" id="user_id" value="{{ auth()->id() }}">
+                                <input type="hidden" name="quantity" id="quantity" value="1">
+                                <button type="submit" class="btn btn-sm text-dark p-0">
+                                    <i class="fas fa-shopping-cart text-primary mr-1"></i>Add Cart
+                                </button>
+                            </form>
                         </div>
                     </div>
-                    <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a href="{{ route('detail.show', ['product' => $products->id]) }}"
-                            class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>ViewDetail</a>
-                        <form action="{{ route('carts.store') }}" method="post">
-                            @csrf
-                            <input type="hidden" name="product_id" id="product_id" value="{{ $products->id }}">
-                            <input type="hidden" name="user_id" id="user_id" value="{{ auth()->id() }}">
-                            <input type="hidden" name="quantity" id="quantity" value="1">
-                            <button type="submit" class="btn btn-sm text-dark p-0">
-                                <i class="fas fa-shopping-cart text-primary mr-1"></i>Add Cart
-                            </button>
-                        </form>
-                    </div>
                 </div>
-            </div>
-        @endforeach
+            @endforeach
         </div>
     </div>
     <!-- Products End -->
@@ -472,11 +475,10 @@
                     </div>
                     <div class="vendor-item border p-4">
                         <img src="{{ url('/images/' . 'vendor-5.jpg') }}" alt="2" />
-                    </div>   
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <!-- Vendor End -->
-
 @endsection

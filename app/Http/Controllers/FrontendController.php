@@ -17,25 +17,26 @@ class FrontendController extends Controller
      */
     public function index()
     {
-        $product=Product::all();
-        $category=Category::all()->where('parent_id', null);
-        $cartCount=Cart::all()->count();
-        return view('ecommerce.index',compact('product', 'category','cartCount'));
+        $product = Product::all();
+        $category = Category::all()->where('parent_id', null);
+        $cartCount = Cart::all()->count();
+        return view('ecommerce.index', compact('product', 'category', 'cartCount'));
     }
-    public function shop(int $page=1)
+    public function shop(int $page = 1)
     {
         if ($page !== 1) {
             $product = Product::all()->limit(10)->offset(($page - 1) * 9)->get();
         } else {
             $product = Product::paginate(9);
         }
-        
-        $pageCount = ceil(Product::count() / 9);       
-        
-        $category=Category::all()->where('parent_id', null);
-        return view('ecommerce.shop',compact('product', 'category','pageCount'));  
+
+        $pageCount = ceil(Product::count() / 9);
+
+        $category = Category::all()->where('parent_id', null);
+        return view('ecommerce.shop', compact('product', 'category', 'pageCount'));
     }
-    public function shopajax(Request $request){
+    public function shopajax(Request $request)
+    {
         $page = $request->page ?? 1;
         if ($page !== 1) {
             $products = Product::limit(9)->offset(($page - 1) * 9)->get();
@@ -44,27 +45,27 @@ class FrontendController extends Controller
         }
 
 
-        $category=Category::all()->where('parent_id', null);
+        $category = Category::all()->where('parent_id', null);
 
-        
-        $pageCount = ceil(Product::count() / 9);       
-        
+
+        $pageCount = ceil(Product::count() / 9);
+
         $data = [
             'product' => $products,
             'category' => $category,
             'pageCount' => $pageCount
         ];
-    
+
         return response()->json($data);
-    }
-    
+    }   
+
     public function checkout(string $id)
     {
-        $cart=Cart::all()->where('user_id', $id);
-        $user=User::find(auth()->id());
-        $category=Category::all()->where('parent_id', null);
+        $cart = Cart::all()->where('user_id', $id);
+        $user = User::find(auth()->id());
+        $category = Category::all()->where('parent_id', null);
 
-        return view('ecommerce.checkout', compact('cart','user', 'category'));
+        return view('ecommerce.checkout', compact('cart', 'user', 'category'));
     }
     public function orderStore(Request $request)
     {
@@ -74,20 +75,20 @@ class FrontendController extends Controller
             'order_detail' => 'required|json',
             'total' => 'required|integer',
         ]);
-    
+
         // Create a new order
         $order = new Order;
         $order->user_id = $request->input('user_id');
         $order->order_detail = $request->input('order_detail');
         $order->total = $request->input('total');
         $order->save();
-    
+
         // Decode the JSON data
         $orderData = json_decode($order->order_detail);
-    
+
         // Save order details
         foreach ($orderData as $orderDataItem) {
-            $orderDetail = new Order_detail; 
+            $orderDetail = new Order_detail;
             $orderDetail->order_id = $order->id;
             $orderDetail->product_id = $orderDataItem->product_id;
             $orderDetail->quantity = $orderDataItem->product_quantity;
@@ -96,13 +97,13 @@ class FrontendController extends Controller
         }
         //Deleting carts 
         $carts = Cart::where('user_id', auth()->id())->get();
-        foreach($carts as $cart){
+        foreach ($carts as $cart) {
             $cart->delete();
         }
         return redirect()->route('frontend.index')->with('success', 'Order placed successfully');
     }
-    
-   
+
+
     /**
      * Show the form for creating a new resource.
      */
@@ -124,17 +125,18 @@ class FrontendController extends Controller
      */
     public function show(string $id)
     {
-        $product=Product::find($id);
-        $allProduct=Product::all();
-        $category=Category::all()->where('parent_id', null);
-        
-        return view('ecommerce.detail', compact('product', 'allProduct','category'));
+        $product = Product::find($id);
+        $allProduct = Product::all();
+        $category = Category::all()->where('parent_id', null);
+
+        return view('ecommerce.detail', compact('product', 'allProduct', 'category'));
     }
-    
-    public function cartShow(){
-        $id=auth()->id();
-        $cart=Cart::all()->where('user_id', $id);
-        return view('ecommerce.cart',compact('cart'));
+
+    public function cartShow()
+    {
+        $id = auth()->id();
+        $cart = Cart::all()->where('user_id', $id);
+        return view('ecommerce.cart', compact('cart'));
     }
 
     /**
@@ -160,4 +162,29 @@ class FrontendController extends Controller
     {
         //
     }
+    public function search(Request $request)
+    {
+        $search = $request->search;
+        $page = $request->page ?? 1;
+        $perPage = 9; 
+
+        $offset = ($page - 1) * $perPage;
+
+        $product = Product::where('name', 'LIKE', '%' . $search . '%')
+            ->skip($offset)
+            ->take($perPage)
+            ->get();
+
+        // Calculate the total number of pages
+        $totalCount = Product::where('name', 'LIKE', '%' . $search . '%')->count();
+        $pageCount = ceil($totalCount / $perPage);
+
+        // You can retrieve categories and cart count if needed
+        $category = Category::all()->where('parent_id', null);
+        $cartCount = Cart::count();
+
+        return view('ecommerce.search', compact('product', 'category', 'pageCount', 'cartCount'));
+    }
+
 }
+
