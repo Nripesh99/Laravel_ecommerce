@@ -85,3 +85,7 @@ Breadcrumbs::for('frontend.search', function (BreadcrumbTrail $trail){
     $trail->parent('frontend.shop');
     $trail->push('Search', route('frontend.shop'));
 });
+Breadcrumbs::for('frontend.searchCategory', function (BreadcrumbTrail $trail){
+    $trail->parent('frontend.shop');
+    $trail->push('Category', route('frontend.index'));
+});

@@ -193,9 +193,9 @@
                                 @endphp
                                 @for ($i = 1; $i <= $pageCount; $i++)
                                     <li class="page-item ">
-                                        {{-- <a class="page-link"
-                                            href="{{ route('frontend.shop', ['page' => $counter]) }}">{{ $counter }}</a> --}}
-                                        <a class="page-link">{{ $counter }}</a>
+                                         <a class="page-link"
+                                            href="{{ route('frontend.shop', ['page' => $counter]) }}">{{ $counter }}</a> 
+                                        {{-- <a class="page-link">{{ $counter }}</a> --}}
                                     </li>
                                     @php
                                         $counter++;

@@ -51,8 +51,7 @@ class CartController extends Controller
         if ($existingProduct && $existingPerson) {
             $cart = $existingProduct;
             $actualQuantity = Stock::where('product_id', $request->product_id)->first();
-
-            if ($actualQuantity->quantity <= 0) {
+            if ($actualQuantity->quantity <= 0 || $request->input('quantity') > $actualQuantity->quantity) {
                 return back()->with('error', 'No stock present');
             }
 
@@ -65,7 +64,7 @@ class CartController extends Controller
             if($actualQuantity === null){
                 return back()->with('error', 'No stock present');
             }
-            if ($actualQuantity->quantity <= 0) {
+            if ($actualQuantity->quantity <= 0 || $request->input('quantity') > $actualQuantity->quantity) {
                 return back()->with('error', 'No stock present');
             }
 

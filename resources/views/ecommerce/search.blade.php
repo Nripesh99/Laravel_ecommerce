@@ -175,26 +175,26 @@
                     </div>
                 </div>
                 <div class="row pb-3" id="productContainer">
-                    @foreach ($product as $product)
+                    @foreach ($product as $products)
                     <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
                         <div class="card product-item border-0 mb-4">
                             <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                                <img class="img-fluid w-100" src="/images/{{ $product->image }}" alt="" style="min-height:200px; max-height: 200px" />
+                                <img class="img-fluid w-100" src="/images/{{ $products->image }}" alt="" style="min-height:200px; max-height: 200px" />
                             </div>
                             <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                                <h6 class="text-truncate mb-3">{{ $product->name }}</h6>
+                                <h6 class="text-truncate mb-3">{{ $products->name }}</h6>
                                 <div class="d-flex justify-content-center">
-                                    <h6>{{ $product->price }}</h6>
+                                    <h6>{{ $products->price }}</h6>
                                 </div>
                             </div>
                             <div class="card-footer d-flex justify-content-between bg-light border">
-                                <a href="/ecommerce/{{ $product->id }}" class="btn btn-sm text-dark p-0">
+                                <a href="/ecommerce/{{ $products->id }}" class="btn btn-sm text-dark p-0">
                                     <i class="fas fa-eye text-primary mr-1"></i>View Detail
                                 </a>
                                 <form action="{{ route('carts.store') }}" method="post">
                                     @csrf
-                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                    <input type="hidden" name="user_id" value="{{ $product->user_id }}">
+                                    <input type="hidden" name="product_id" value="{{ $products->id }}">
+                                    <input type="hidden" name="user_id" value="{{ $products->user_id }}">
                                     <input type="hidden" name="quantity" value="1">
                                     <button type="submit" class="btn btn-sm text-dark p-0">
                                         <i class="fas fa-shopping-cart text-primary mr-1"></i>Add Cart
@@ -205,38 +205,10 @@
                     </div>
                     @endforeach
                 </div>
-    
-                <div class="col-12 pb-1">
-                    @if ($pageCount > 0)
-                        <nav aria-label="Page navigation">
-                            <ul class="pagination justify-content-center mb-3">
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="#" aria-label="Previous">
-                                        <span aria-hidden="true">&laquo;</span>
-                                        <span class="sr-only">Previous</span>
-                                    </a>
-                                </li>
-                                @php
-                                    $counter = 1;
-                                @endphp
-                                @for ($i = 1; $i <= $pageCount; $i++)
-                                    <li class="page-item ">
-                                        <a class="page-link"
-                                            href="{{ route('frontend.search', ['page' => $counter]) }}">{{ $counter }}</a>
-                                    </li>
-                                    @php
-                                        $counter++;
-                                    @endphp
-                                @endfor
-                                <a class="page-link" href="{{ route('frontend.search') }}" aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                    <span class="sr-only">Next</span>
-                                </a>
-                                </li>
-                            </ul>
-                        </nav>
-                    @endif
-                </div>
+                    <div class="d-flex justify-content-center">
+
+                        {{ $product->links() }}
+                    </div>
             </div>
         </div>
         <!-- Shop Product End -->

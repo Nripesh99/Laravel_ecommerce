@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Order;
+use App\Models\Order_detail;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -12,8 +14,8 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $order=Order::all();
-        return view('orders.view',['orders'=>$order]);
+        $order=Order_detail::all();
+        return view('orders.index',['orders'=>$order]);
     }
 
     /**

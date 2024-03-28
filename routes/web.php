@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FrontendController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StockController;
@@ -34,6 +35,8 @@ Route::post('/checkout',[FrontendController::class,'orderStore'])->name('fronten
 Route::get('/shop',[FrontendController::class, 'shop'])->name('frontend.shop');
 Route::get('/shopajax',[FrontendController::class, 'shopajax'])->name('frontend.shopajax');
 Route::get('/search', [FrontendController::class, 'search'])->name('frontend.search');
+Route::get('/searchCategory/{category}', [FrontendController::class, 'searchCategory'])->name('frontend.searchCategory');
+
 
 
 
@@ -71,9 +74,9 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'],function()
     Route::get('products/{product}/edit',[ProductController::class,'edit'])->name('products.edit');
     Route::put('products/{[product}',[ProductController::class,'update'])->name('products.update');
     Route::delete('products/{product}',[ProductController::class, 'destroy'])->name('products.destroy');
-    Route::middleware('auth')->group(function(){
-    });
-
+    // Route::middleware('auth')->group(function(){
+    // });
+    Route::resource('orders', OrderController::class);
 });
 
 

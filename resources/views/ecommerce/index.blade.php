@@ -99,8 +99,8 @@
                                         <div
                                             class="dropdown-menu position-absolute bg-secondary border-0 rounded-0 w-100 m-0">
                                             @foreach ($categories->subcategory as $subcategory)
-                                                <a href=""
-                                                    class="dropdown-item">{{ $subcategory->category_name }}</a>
+                                            <a href="{{route('frontend.searchCategory', ['category' => $subcategory->id])}}"
+                                                class="dropdown-item">{{ $subcategory->category_name }}</a>
                                             @endforeach
                                         </div>
                                     </div>

@@ -170,20 +170,38 @@ class FrontendController extends Controller
 
         $offset = ($page - 1) * $perPage;
 
-        $product = Product::where('name', 'LIKE', '%' . $search . '%')
-            ->skip($offset)
-            ->take($perPage)
-            ->get();
-
+        // $product = Product::where('name', 'LIKE', '%' . $search . '%')
+        //     ->skip($offset)
+        //     ->take($perPage)
+        //     ->get();
+        $product= Product::where('name', 'LIKE', '%' . $search . '%')->paginate(9);
         // Calculate the total number of pages
-        $totalCount = Product::where('name', 'LIKE', '%' . $search . '%')->count();
-        $pageCount = ceil($totalCount / $perPage);
+       
 
         // You can retrieve categories and cart count if needed
         $category = Category::all()->where('parent_id', null);
         $cartCount = Cart::count();
 
+        return view('ecommerce.search', compact('product', 'category', 'cartCount'));
+    }
+
+    public function searchCategory(Request $request){
+        $page = $request->page ?? 1;
+        $perPage = 9; 
+        $offset = ($page - 1) * $perPage;
+        $category_id=$request->category;
+        $product=Product::where('category_id', $category_id)
+        ->skip($offset)
+        ->take($perPage)
+        ->get();
+        $category = Category::all()->where('parent_id', null);
+        $totalCount=Product::where('category_id', $category_id)->count();
+        $pageCount = ceil($totalCount / $perPage);
+        $cartCount = Cart::count();
+
         return view('ecommerce.search', compact('product', 'category', 'pageCount', 'cartCount'));
+
+
     }
 
 }

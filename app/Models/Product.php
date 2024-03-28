@@ -26,5 +26,8 @@ class Product extends Model
     {
         return $this->belongsToMany(Cart::class);
     }
+    public function order_details(){
+        return $this->hasMany(Order_detail::class, 'product_id');
+    }
 
 }

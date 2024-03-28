@@ -97,7 +97,7 @@
                 <div class="icon">
                     <i class="fas fa-list"></i>
                 </div>
-                <a href="#" class="small-box-footer">
+                <a href="{{ route('orders.index') }}" class="small-box-footer">
                     Order Info  <i class="fas fa-arrow-circle-right"></i>
                 </a>
             </div>
