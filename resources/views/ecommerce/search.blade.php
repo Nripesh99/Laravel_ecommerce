@@ -3,6 +3,8 @@
     /*  */
 </style>
 @section('content')
+
+
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-2">
@@ -12,11 +14,24 @@
             <div class="col-sm-6">
                 <div class="float-sm-right mx-5" style="background-color: white !important">
                     <!-- Content goes here -->
-                    @if (Breadcrumbs::exists(Route::currentRouteName()))
-                        {{ Breadcrumbs::render(Route::currentRouteName()) }}
-                    @else
-                        {{ Route::currentRouteName() }}
+                    @if(Route::currentRouteName() === 'frontend.searchCategory')
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{{route('frontend.index')}}">Home</a></li>
+                            @foreach($categoriesInBetween as $category_id =>$category_name)
+                            <li class="breadcrumb-item"><a href="{{route('frontend.searchCategory', ['category' => $category_id])}}">{{$category_name}}</a></li>
+                            @endforeach
+                        </ol>
+                    </nav>
                     @endif
+                    @if(Route::currentRouteName() === 'frontend.search')
+                    <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{route('frontend.index')}}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{route('frontend.search',['search'=>$search])}}"><small>Product like </small> {{$search}}</a></li>
+                    </ol>
+                </nav>
+                @endif
                 </div>
             </div>
         </div>
@@ -176,39 +191,41 @@
                 </div>
                 <div class="row pb-3" id="productContainer">
                     @foreach ($product as $products)
-                    <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
-                        <div class="card product-item border-0 mb-4">
-                            <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                                <img class="img-fluid w-100" src="/images/{{ $products->image }}" alt="" style="min-height:200px; max-height: 200px" />
-                            </div>
-                            <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                                <h6 class="text-truncate mb-3">{{ $products->name }}</h6>
-                                <div class="d-flex justify-content-center">
-                                    <h6>{{ $products->price }}</h6>
+                        <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
+                            <div class="card product-item border-0 mb-4">
+                                <div
+                                    class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                                    <img class="img-fluid w-100" src="/images/{{ $products->image }}" alt=""
+                                        style="min-height:200px; max-height: 200px" />
+                                </div>
+                                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                                    <h6 class="text-truncate mb-3">{{ $products->name }}</h6>
+                                    <div class="d-flex justify-content-center">
+                                        <h6>{{ $products->price }}</h6>
+                                    </div>
+                                </div>
+                                <div class="card-footer d-flex justify-content-between bg-light border">
+                                    <a href="/ecommerce/{{ $products->id }}" class="btn btn-sm text-dark p-0">
+                                        <i class="fas fa-eye text-primary mr-1"></i>View Detail
+                                    </a>
+                                    <form action="{{ route('carts.store') }}" method="post">
+                                        @csrf
+                                        <input type="hidden" name="product_id" value="{{ $products->id }}">
+                                        <input type="hidden" name="user_id" value="{{ $products->user_id }}">
+                                        <input type="hidden" name="quantity" value="1">
+                                        <button type="submit" class="btn btn-sm text-dark p-0">
+                                            <i class="fas fa-shopping-cart text-primary mr-1"></i>Add Cart
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
-                            <div class="card-footer d-flex justify-content-between bg-light border">
-                                <a href="/ecommerce/{{ $products->id }}" class="btn btn-sm text-dark p-0">
-                                    <i class="fas fa-eye text-primary mr-1"></i>View Detail
-                                </a>
-                                <form action="{{ route('carts.store') }}" method="post">
-                                    @csrf
-                                    <input type="hidden" name="product_id" value="{{ $products->id }}">
-                                    <input type="hidden" name="user_id" value="{{ $products->user_id }}">
-                                    <input type="hidden" name="quantity" value="1">
-                                    <button type="submit" class="btn btn-sm text-dark p-0">
-                                        <i class="fas fa-shopping-cart text-primary mr-1"></i>Add Cart
-                                    </button>
-                                </form>
-                            </div>
                         </div>
-                    </div>
                     @endforeach
                 </div>
-                    <div class="d-flex justify-content-center">
+                <div class="d-flex justify-content-center">
 
-                        {{ $product->links() }}
-                    </div>
+                    {{ $product->links() }}
+                </div>
             </div>
         </div>
         <!-- Shop Product End -->
@@ -230,34 +247,34 @@
         //                 let combinedHtml = '';
         //                 products.forEach(function(product) {
         //                     combinedHtml += `
-        //                 <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
-        //                     <div class="card product-item border-0 mb-4">
-        //                         <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-        //                             <img class="img-fluid w-100" src="/images/${product.image}" alt="" style="min-height:200px; max-height: 200px" />
-        //                         </div>
-        //                         <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-        //                             <h6 class="text-truncate mb-3">${product.name}</h6>
-        //                             <div class="d-flex justify-content-center">
-        //                                 <h6>${product.price}</h6>
-        //                             </div>
-        //                         </div>
-        //                         <div class="card-footer d-flex justify-content-between bg-light border">
-        //                             <a href="/ecommerce/${product.id}" class="btn btn-sm text-dark p-0">
-        //                                 <i class="fas fa-eye text-primary mr-1"></i>View Detail
-        //                             </a>
-        //                             <form action="{{ route('carts.store') }}" method="post">
-        //                                 @csrf
-        //                                 <input type="hidden" name="product_id" value="${product.id}">
-        //                                 <input type="hidden" name="user_id" value="${product.user_id}">
-        //                                 <input type="hidden" name="quantity" value="1">
-        //                                 <button type="submit" class="btn btn-sm text-dark p-0">
-        //                                     <i class="fas fa-shopping-cart text-primary mr-1"></i>Add Cart
-        //                                 </button>
-        //                             </form>
-        //                         </div>
-        //                     </div>
-        //                 </div>
-        //                 `;
+    //                 <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
+    //                     <div class="card product-item border-0 mb-4">
+    //                         <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+    //                             <img class="img-fluid w-100" src="/images/${product.image}" alt="" style="min-height:200px; max-height: 200px" />
+    //                         </div>
+    //                         <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+    //                             <h6 class="text-truncate mb-3">${product.name}</h6>
+    //                             <div class="d-flex justify-content-center">
+    //                                 <h6>${product.price}</h6>
+    //                             </div>
+    //                         </div>
+    //                         <div class="card-footer d-flex justify-content-between bg-light border">
+    //                             <a href="/ecommerce/${product.id}" class="btn btn-sm text-dark p-0">
+    //                                 <i class="fas fa-eye text-primary mr-1"></i>View Detail
+    //                             </a>
+    //                             <form action="{{ route('carts.store') }}" method="post">
+    //                                 @csrf
+    //                                 <input type="hidden" name="product_id" value="${product.id}">
+    //                                 <input type="hidden" name="user_id" value="${product.user_id}">
+    //                                 <input type="hidden" name="quantity" value="1">
+    //                                 <button type="submit" class="btn btn-sm text-dark p-0">
+    //                                     <i class="fas fa-shopping-cart text-primary mr-1"></i>Add Cart
+    //                                 </button>
+    //                             </form>
+    //                         </div>
+    //                     </div>
+    //                 </div>
+    //                 `;
         //                 });
 
         //                 $('#productContainer').html(combinedHtml);

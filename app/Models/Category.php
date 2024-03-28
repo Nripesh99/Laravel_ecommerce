@@ -16,5 +16,15 @@ class Category extends Model
     public function subcategory(){
         return $this->hasMany(Category::class,'parent_id','id');
     }
+    public function parent()
+    {
+        return $this->belongsTo(Category::class, 'parent_id');
+    }
+
+    public function ancestors()
+    {
+        return $this->parent ? $this->parent->ancestors()->merge([$this]) : collect([$this]);
+    }
+
     
 }

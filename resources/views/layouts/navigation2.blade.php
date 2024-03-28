@@ -96,8 +96,8 @@
                                     <div
                                         class="dropdown-menu position-absolute bg-secondary border-0 rounded-0 w-100 m-0">
                                         @foreach ($categories->subcategory as $subcategory)
-                                            <a href="{{route('frontend.searchCategory', ['category' => $subcategory->id])}}"
-                                                class="dropdown-item">{{ $subcategory->category_name }}</a>
+                                        <a href="{{route('frontend.searchCategory', ['category' => $subcategory->id])}}"
+                                            class="dropdown-item">{{ $subcategory->category_name }}</a>
                                         @endforeach
                                     </div>
                                 </div>
@@ -120,7 +120,7 @@
                 </button>
                 <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                     <div class="navbar-nav mr-auto py-0">
-                        <a href="{{route('frontend.index')}}" class="nav-item nav-link">Home</a>
+                        <a href="index.html" class="nav-item nav-link">Home</a>
                         <a href="{{ route('frontend.shop') }}" class="nav-item nav-link">Shop</a>
                         <a href="detail.html" class="nav-item nav-link active">Shop Detail</a>
                         <div class="nav-item dropdown">

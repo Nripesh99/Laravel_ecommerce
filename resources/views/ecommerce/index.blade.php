@@ -130,11 +130,17 @@
                             <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
                                 <div class="dropdown-menu rounded-0 m-0">
-                                    <a href="cart.html" class="dropdown-item">Shopping Cart</a>
+                                    @auth
+                                    <a href="{{ route('carts.show', ['cart' => auth()->id()]) }}" class="dropdown-item">Shopping Cart</a>
+                                    @endauth
+                                    @guest
+                                    <a href="{{ route('login') }}" class="dropdown-item">Shopping Cart</a>
+
+                                    @endguest
                                     <a href="checkout.html" class="dropdown-item">Checkout</a>
                                 </div>
                             </div>
-                            <a href="contact.html" class="nav-item nav-link">Contact</a>
+                            <a href="" class="nav-item nav-link">Contact</a>
                         </div>
                         <div class="navbar-nav ml-auto py-0">
                             @guest

@@ -12,11 +12,17 @@
             </div>
             <div class="col-sm-6">
                 <div class="float-sm-right mx-5" style="background-color: white !important">
-                    <!-- Content goes here -->
-                    @if (Breadcrumbs::exists(Route::currentRouteName()))
-                        {{ Breadcrumbs::render(Route::currentRouteName()) }}
-                    @else
-                        {{ Route::currentRouteName() }}
+                    @if(Route::currentRouteName() === 'detail.show')
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{{route('frontend.index')}}">Home</a></li>
+                            @foreach($categoriesInBetween as $category_id =>$category_name)
+                            <li class="breadcrumb-item"><a href="{{route('frontend.searchCategory', ['category' => $category_id])}}">{{$category_name}}</a></li>
+                            @endforeach
+                            <li class="breadcrumb-item"><a href="#">{{$product->name}}</a></li>
+
+                        </ol>
+                    </nav>
                     @endif
                 </div>
             </div>
@@ -145,6 +151,7 @@
                         </div>
                         </button>
                     </div>
+                    @auth
                     <form action="{{ route('carts.store') }}" method="post">
                         @csrf
                         <input type="hidden" name="product_id" id="product_id" value="{{ $product->id }}">
@@ -154,7 +161,11 @@
                         <button type="submit" class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i> Add
                             To Cart</button>
                     </form>
-
+                    @endauth
+                    @guest
+                    <a href="{{route('login')}}" class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i> Add
+                        To Cart</a>
+                    @endguest
                 </div>
                 <div class="d-flex pt-2">
                     <p class="text-dark font-weight-medium mb-0 mr-2">Share on:</p>

@@ -39,13 +39,13 @@ class CartController extends Controller
             'product_id' => 'required|exists:products,id',
             'quantity' => 'required|integer|min:1',
         ]);
-
         // Find whether the product already exists in the cart
         $existingProduct = Cart::where('product_id', $request->input('product_id'))
-            ->where('user_id', $request->input('user_id'))
-            ->first();
-
+        ->where('user_id', $request->input('user_id'))
+        ->first();
+        
         // Find whether the user already exists
+        
         $existingPerson = User::find($request->input('user_id'));
 
         if ($existingProduct && $existingPerson) {
@@ -103,11 +103,24 @@ class CartController extends Controller
         $request->validate([
             'quantity' => 'required|integer|min:1',
         ]);
-        $cart = Cart::findOrFail($cart->id);
-        $cart->quantity = $request->input('quantity');
-        $cart->save();
-        return back()->with('success', 'cart updated');
+        // Find the existing cart item
+        $existingCart = Cart::find($cart->id);
+        if (!$existingCart) {
+            return back()->with('error', 'Cart item not found');
+        }
+        // Find the stock for the product
+        $actualQuantity = Stock::where('product_id', $existingCart->product_id)->first();
+        if ($actualQuantity === null) {
+            return back()->with('error', 'No stock present');
+        }
+        if ($actualQuantity->quantity <= 0 || $request->quantity > $actualQuantity->quantity) {
+            return back()->with('error', 'Not enough stock available');
+        }
+        $existingCart->quantity = $request->quantity;
+        $existingCart->save();
+        return back()->with('success', 'Cart item updated successfully');
     }
+    
 
     /**
      * Remove the specified resource from storage.

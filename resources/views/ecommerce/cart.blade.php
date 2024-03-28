@@ -14,6 +14,8 @@
                 @else
                     {{ Route::currentRouteName() }}
                 @endif
+                {{Route::current()->getName()}}
+                
             </div>
         </div>
     </div>

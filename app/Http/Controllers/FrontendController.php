@@ -125,11 +125,13 @@ class FrontendController extends Controller
      */
     public function show(string $id)
     {
-        $product = Product::find($id);
         $allProduct = Product::all();
+        $product = Product::find($id);
+        $category_id=Category::where('id',$product->category_id)->first();
+        $subCategory = Category::findOrFail($category_id->id);
+        $categoriesInBetween = $subCategory->ancestors()->pluck('category_name', 'id');
         $category = Category::all()->where('parent_id', null);
-
-        return view('ecommerce.detail', compact('product', 'allProduct', 'category'));
+        return view('ecommerce.detail', compact('product', 'allProduct', 'category','categoriesInBetween'));
     }
 
     public function cartShow()
@@ -170,10 +172,6 @@ class FrontendController extends Controller
 
         $offset = ($page - 1) * $perPage;
 
-        // $product = Product::where('name', 'LIKE', '%' . $search . '%')
-        //     ->skip($offset)
-        //     ->take($perPage)
-        //     ->get();
         $product= Product::where('name', 'LIKE', '%' . $search . '%')->paginate(9);
         // Calculate the total number of pages
        
@@ -182,7 +180,7 @@ class FrontendController extends Controller
         $category = Category::all()->where('parent_id', null);
         $cartCount = Cart::count();
 
-        return view('ecommerce.search', compact('product', 'category', 'cartCount'));
+        return view('ecommerce.search', compact('product', 'category', 'cartCount','search'));
     }
 
     public function searchCategory(Request $request){
@@ -191,17 +189,17 @@ class FrontendController extends Controller
         $offset = ($page - 1) * $perPage;
         $category_id=$request->category;
         $product=Product::where('category_id', $category_id)
-        ->skip($offset)
-        ->take($perPage)
-        ->get();
+        ->paginate(9);
         $category = Category::all()->where('parent_id', null);
-        $totalCount=Product::where('category_id', $category_id)->count();
-        $pageCount = ceil($totalCount / $perPage);
-        $cartCount = Cart::count();
+      
+        // $categoryP = Category::where('id', $category_id)->get();
+        // dd($categoryP);
 
-        return view('ecommerce.search', compact('product', 'category', 'pageCount', 'cartCount'));
+        $subCategory = Category::findOrFail($category_id);
 
+        $categoriesInBetween = $subCategory->ancestors()->pluck('category_name', 'id');
 
+        return view('ecommerce.search', compact('product', 'category','categoriesInBetween'));
     }
 
 }
