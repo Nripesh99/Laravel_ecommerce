@@ -9,7 +9,9 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StockController;
+use App\Mail\OrderEmail;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 
@@ -27,6 +29,9 @@ use Illuminate\Support\Facades\Route;
 /*
 |Frontend for the user's
 */
+Route::get('/mail', function () {
+    Mail::to('recipient@example.com')->send(new OrderEmail());
+});
 
 Route::get('/',[FrontendController::class,'index'])->name('frontend.index');
 Route::get('/ecommerce/{product}',[FrontendController::class,'show'])->name('detail.show');

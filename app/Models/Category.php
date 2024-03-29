@@ -25,6 +25,21 @@ class Category extends Model
     {
         return $this->parent ? $this->parent->ancestors()->merge([$this]) : collect([$this]);
     }
+    public function descendants()
+    {
+        $descendants = collect([$this]);
+        
+        $children = $this->hasMany(Category::class, 'parent_id')->get();
+    
+        foreach ($children as $child) {
+            $descendants = $descendants->merge($child->descendants());
+        }
+    
+        return $descendants;
+    }
+    
+    
+
 
     
 }

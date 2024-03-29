@@ -184,17 +184,19 @@ class FrontendController extends Controller
     }
 
     public function searchCategory(Request $request){
+        
         $page = $request->page ?? 1;
         $perPage = 9; 
         $offset = ($page - 1) * $perPage;
         $category_id=$request->category;
-        $product=Product::where('category_id', $category_id)
-        ->paginate(9);
+        $category=Category::findOrFail($category_id);
+        $categoryId = array();
+        foreach($category->descendants() as $ancestor){
+            $categoryId[]=$ancestor->id;
+        }
+        // dd($categoryId);
+            $product = Product::whereIn('category_id',$categoryId)->paginate(9);
         $category = Category::all()->where('parent_id', null);
-      
-        // $categoryP = Category::where('id', $category_id)->get();
-        // dd($categoryP);
-
         $subCategory = Category::findOrFail($category_id);
 
         $categoriesInBetween = $subCategory->ancestors()->pluck('category_name', 'id');

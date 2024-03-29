@@ -38,6 +38,7 @@
                             <tbody>
                                 @php
                                     $index=1;
+                                    $category_name=[];
                                 @endphp
                                 @foreach ($product as $products)
                                 <tr>
@@ -46,7 +47,9 @@
                                     <td>{{ $products->price }}</td>
                                     <td>{{ $products->SKU }}</td>
                                     <td>{{ $products->product_description }}</td>
-                                    <td>{{ $products->category->category_name }}</td>
+                                    @foreach($products->category->descendants() as $categories)
+                                    <td>{{$categories->category_name}}</td>
+                                    @endforeach
                                 </tr>
                                 @php
                                     $index++;
