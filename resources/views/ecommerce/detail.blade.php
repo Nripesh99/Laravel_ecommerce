@@ -59,7 +59,10 @@
             </div>
 
             <div class="col-lg-7 pb-5">
-                <h3 class="font-weight-semi-bold">{{ $product->name }}</h3>
+                <div class="d-flex">
+                <h3 class="font-weight-semi-bold d-flex">{{ $product->name }}</h3>
+                <small class="pt-1 d-flex mx-2">({{$product->SKU}})</small>
+                </div>
                 <div class="d-flex mb-3">
                     <div class="text-primary mr-2">
                         <small class="fas fa-star"></small>
@@ -70,10 +73,12 @@
                     </div>
                     <small class="pt-1">(50 Reviews)</small>
                 </div>
-                <h3 class="font-weight-semi-bold mb-4">{{ $product->price }}</h3>
-                <p class="mb-4">Volup erat ipsum diam elitr rebum et dolor. Est nonumy elitr erat diam stet sit clita ea.
-                    Sanc invidunt ipsum et, labore clita lorem magna lorem ut. Erat lorem duo dolor no sea nonumy. Accus
-                    labore stet, est lorem sit diam sea et justo, amet at lorem et eirmod ipsum diam et rebum kasd rebum.
+                <div class="d-flex">
+                    <h3 class="font-weight-semi-bold mb-4 d-flex">Rs {{ $product->price }} </h3>
+                    <small class="pt-1 d-flex mx-2">  (stock quantity: {{ isset($product->stock) ? $product->stock->quantity : '0' }})</small>
+                </div>
+                <p class="mb-4">
+                    {{ str_limit($product->product_description, 100) }}
                 </p>
                 <!--Variant not needed for now -->
                 {{-- <div class="d-flex mb-3">
@@ -168,19 +173,10 @@
                     @endguest
                 </div>
                 <div class="d-flex pt-2">
-                    <p class="text-dark font-weight-medium mb-0 mr-2">Share on:</p>
+                    <p class="text-dark font-weight-medium mb-0 mr-2">Category:</p>
                     <div class="d-inline-flex">
-                        <a class="text-dark px-2" href="">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a class="text-dark px-2" href="">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a class="text-dark px-2" href="">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        <a class="text-dark px-2" href="">
-                            <i class="fab fa-pinterest"></i>
+                        <a class="text-dark  font-weight-bold" href="{{route('frontend.searchCategory', ['category' => $product->category->id])}}">
+                            {{$product->category->category_name}}
                         </a>
                     </div>
                 </div>
@@ -321,7 +317,7 @@
                             <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
                                 <h6 class="text-truncate mb-3">{{ $allProducts->name }}</h6>
                                 <div class="d-flex justify-content-center">
-                                    <h6>{{ $allProducts->price }}</h6>
+                                    <h6>Rs {{ $allProducts->price }}</h6>
                                 </div>
                             </div>
                             <div class="card-footer d-flex justify-content-between bg-light border">

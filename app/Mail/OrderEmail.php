@@ -16,12 +16,13 @@ class OrderEmail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public $order;
+    public function __construct($order)
     {
-        //
+        $this->order = $order;
     }
 
-    /**
+    /** 
      * Get the message envelope.
      */
     public function envelope(): Envelope
@@ -43,7 +44,7 @@ class OrderEmail extends Mailable
     public function build()
     {
         return $this->subject('Sample Email')
-        ->view('emails.sample'); 
+        ->view('emails.sample')->with(['order' => $this->order]);; 
     }
 
     /**

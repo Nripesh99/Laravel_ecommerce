@@ -54,18 +54,18 @@
         <div class="col-lg-3 col-6 text-right">
             <a href="" class="btn border">
                 <i class="fas fa-heart text-primary"></i>
-                <span class="badge">0</span>
+                <span class="badge"></span>
             </a>
             @auth
                 <a href="{{ route('carts.show', ['cart' => auth()->id()]) }}" class="btn border">
                     <i class="fas fa-shopping-cart text-primary"></i>
-                    <span class="badge">0</span>
+                    <span class="badge">{{$cartCount}}</span>
                 </a>
             @endauth
             @guest
                 <a href="{{ route('login') }}" class="btn border">
                     <i class="fas fa-shopping-cart text-primary"></i>
-                    <span class="badge">0</span>
+                    <span class="badge"></span>
                 </a>
             @endguest
         </div>

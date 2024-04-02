@@ -15,7 +15,7 @@ class CartController extends Controller
      */
     public function index()
     {
-        $category=Category::all();
+        $category = Category::all()->where('parent_id', null);
         $cart = Cart::all();
         return view('carts.index', ['carts' => $cart], ['category' => $category]);
 
@@ -83,8 +83,10 @@ class CartController extends Controller
     public function show(string $id)
     {
         $cart=Cart::all()->where('user_id', $id);
-        $category=Category::all();
-        return view('ecommerce.cart', compact('cart','category'));
+        $category = Category::all()->where('parent_id', null);
+        $cartCount = Cart::where('user_id', auth()->id())->count();
+
+        return view('ecommerce.cart', compact('cart','category','cartCount'));
     }
  
     /**

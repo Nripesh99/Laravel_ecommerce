@@ -57,12 +57,12 @@
             <div class="col-lg-3 col-6 text-right">
                 <a href="" class="btn border">
                     <i class="fas fa-heart text-primary"></i>
-                    <span class="badge">0</span>
+                    <span class="badge"></span>
                 </a>
                 @auth
                     <a href="{{ route('carts.show', ['cart' => auth()->id()]) }}" class="btn border">
                         <i class="fas fa-shopping-cart text-primary"></i>
-                        <span class="badge">0</span>
+                        <span class="badge"><small class="font-weight-bold">{{$cartCount}}</small></span>
                     </a>
                 @endauth
                 @guest
@@ -137,7 +137,7 @@
                                     <a href="{{ route('login') }}" class="dropdown-item">Shopping Cart</a>
 
                                     @endguest
-                                    <a href="checkout.html" class="dropdown-item">Checkout</a>
+                                    <a href="{{route('frontend.showOrder')}}" class="dropdown-item">Checkout</a>
                                 </div>
                             </div>
                             <a href="" class="nav-item nav-link">Contact</a>
@@ -255,15 +255,17 @@
     <!-- Categories Start -->
     <div class="container-fluid pt-5">
         <div class="row px-xl-5 pb-3">
+            @foreach($category as $categories)
             <div class="col-lg-4 col-md-6 pb-1">
                 <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px">
-                    <p class="text-right">15 Products</p>
+                    <p class="text-right">{{ countProducts($categories)}}</p>
                     <a href="" class="cat-img position-relative overflow-hidden mb-3">
                         <img class="img-fluid" src="img/cat-1.jpg" alt="" />
                     </a>
-                    <h5 class="font-weight-semi-bold m-0">Men's dresses</h5>
+                    <h5 class="font-weight-semi-bold m-0">{{$categories->category_name}}</h5>
                 </div>
             </div>
+            @endforeach
             <div class="col-lg-4 col-md-6 pb-1">
                 <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px">
                     <p class="text-right">15 Products</p>
@@ -353,7 +355,7 @@
                 </h2>
             </div>
             <div class="mb-4 mx-5">
-                <h3><a href="#">See more</a></h3>
+                <h3><a href="{{route('frontend.shop')}}">See more</a></h3>
             </div>
         </div>
 
@@ -421,13 +423,18 @@
 
     <!-- Products Start -->
     <div class="container-fluid pt-5">
-        <div class="text-center mb-4">
-            <h2 class="section-title px-5">
-                <span class="px-2">Just Arrived</span>
-            </h2>
+       <div class="d-flex justify-content-between align-items-center">
+            <div class="text-center mb-8">
+                <h2 class="section-title px-5">
+                    <span class="px-2">Just Arrived</span>
+                </h2>
+            </div>
+            <div class="mb-4 mx-5">
+                <h3><a href="{{route('frontend.shop')}}">See more</a></h3>
+            </div>
         </div>
         <div class="row px-xl-5 pb-3">
-            @foreach ($product as $products)
+            @foreach ($productArrived as $products)
                 <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
                     <div class="card product-item border-0 mb-4">
                         <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">

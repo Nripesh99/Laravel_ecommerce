@@ -1,13 +1,24 @@
 @extends('layouts.app2')
 @section('content')
     <!-- Page Header Start -->
-    <div class="container-fluid bg-secondary mb-5">
-        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
-            <h1 class="font-weight-semi-bold text-uppercase mb-3">Checkout</h1>
-            <div class="d-inline-flex">
-                <p class="m-0"><a href="">Home</a></p>
-                <p class="m-0 px-2">-</p>
-                <p class="m-0">Checkout</p>
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-2">
+            </div>
+            <div class="col-sm-4 text-end">
+            </div>
+            <div class="col-sm-6">
+                <div class="float-sm-right mx-5" style="background-color: white !important">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{{route('frontend.index')}}">Home</a></li>
+                            <li class="breadcrumb-item"><a href="{{route('carts.show',['cart'=>auth()->id()])}}">Cart</a></li>
+                            
+                            <li class="breadcrumb-item"><a href="#">Checkout</a></li>
+
+                        </ol>
+                    </nav>
+                </div>
             </div>
         </div>
     </div>
@@ -15,6 +26,7 @@
 
     <!-- Checkout Start -->
     <!--Send detail data from controller -->
+    
     <div class="container-fluid pt-5">
         <div class="row px-xl-5">
             <div class="col-lg-8">
@@ -141,7 +153,7 @@
                         @foreach ($cart as $carts)
                             <div class="d-flex justify-content-between">
                                 <p>{{ $carts->product->name }} ({{ $carts->quantity }})</p>
-                                <p id="price_{{ $carts->id }}">$
+                                <p id="price_{{ $carts->id }}">Rs. 
                                     @php
                                         $totalPrice = $carts->product->price * $carts->quantity; 
                                         $subtotal += $totalPrice; 
@@ -166,11 +178,11 @@
                         <hr class="mt-0">
                         <div class="d-flex justify-content-between mb-3 pt-1">
                             <h6 class="font-weight-medium">Subtotal</h6>
-                            <h6 class="font-weight-medium">${{$subtotal}}</h6>
+                            <h6 class="font-weight-medium">$s. {{$subtotal}}</h6>
                         </div>
                         <div class="d-flex justify-content-between">
                             <h6 class="font-weight-medium">Shipping</h6>
-                            <h6 class="font-weight-medium">$0</h6>
+                            <h6 class="font-weight-medium">Rs 0</h6>
                         </div>
                     </div>
                     <div class="card-footer border-secondary bg-transparent">
