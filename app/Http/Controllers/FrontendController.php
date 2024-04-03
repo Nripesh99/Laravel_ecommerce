@@ -118,7 +118,7 @@ class FrontendController extends Controller
             $cart->delete();
         }
         ProcessEmail::dispatch($orderdetail);
-        return redirect()->route('frontend.index')->with('success', 'Order placed successfully');
+        return redirect()->route('frontend.showOrder')->with('success', 'Order placed successfully');
 
     }
 
@@ -194,16 +194,13 @@ class FrontendController extends Controller
     public function searchCategory(Request $request)
     {
 
-        $page = $request->page ?? 1;
-        $perPage = 9;
-        $offset = ($page - 1) * $perPage;
+       
         $category_id = $request->category;
         $category = Category::findOrFail($category_id);
         $categoryId = array();
         foreach ($category->descendants() as $ancestor) {
             $categoryId[] = $ancestor->id;
         }
-        // dd($categoryId);
         $product = Product::whereIn('category_id', $categoryId)->paginate(9);
         $category = Category::all()->where('parent_id', null);
         $subCategory = Category::findOrFail($category_id);

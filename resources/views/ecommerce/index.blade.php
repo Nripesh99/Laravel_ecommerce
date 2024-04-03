@@ -55,14 +55,14 @@
                 </form>
             </div>
             <div class="col-lg-3 col-6 text-right">
-                <a href="" class="btn border">
-                    <i class="fas fa-heart text-primary"></i>
+                <a href="{{route('frontend.showOrder')}}" class="btn border">
+                    <i class="fas fa-bell text-primary"></i>
                     <span class="badge"></span>
                 </a>
                 @auth
-                    <a href="{{ route('carts.show', ['cart' => auth()->id()]) }}" class="btn border">
-                        <i class="fas fa-shopping-cart text-primary"></i>
-                        <span class="badge"><small class="font-weight-bold">{{$cartCount}}</small></span>
+                <a href="{{ route('carts.show', ['cart' => auth()->id()]) }}" class="btn border">
+                    <i class="fas fa-shopping-cart text-primary"></i>
+                        <span class="badge"><small class="font-weight-bold">{{ $cartCount }}</small></span>
                     </a>
                 @endauth
                 @guest
@@ -99,8 +99,8 @@
                                         <div
                                             class="dropdown-menu position-absolute bg-secondary border-0 rounded-0 w-100 m-0">
                                             @foreach ($categories->subcategory as $subcategory)
-                                            <a href="{{route('frontend.searchCategory', ['category' => $subcategory->id])}}"
-                                                class="dropdown-item">{{ $subcategory->category_name }}</a>
+                                                <a href="{{ route('frontend.searchCategory', ['category' => $subcategory->id, 'slug' => generateSlug($subcategory->category_name)]) }}"
+                                                    class="dropdown-item">{{ $subcategory->category_name }}</a>
                                             @endforeach
                                         </div>
                                     </div>
@@ -131,13 +131,14 @@
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
                                 <div class="dropdown-menu rounded-0 m-0">
                                     @auth
-                                    <a href="{{ route('carts.show', ['cart' => auth()->id()]) }}" class="dropdown-item">Shopping Cart</a>
+                                        <a href="{{ route('carts.show', ['cart' => auth()->id()]) }}"
+                                            class="dropdown-item">Shopping Cart</a>
                                     @endauth
                                     @guest
-                                    <a href="{{ route('login') }}" class="dropdown-item">Shopping Cart</a>
+                                        <a href="{{ route('login') }}" class="dropdown-item">Shopping Cart</a>
 
                                     @endguest
-                                    <a href="{{route('frontend.showOrder')}}" class="dropdown-item">Checkout</a>
+                                    <a href="{{ route('frontend.showOrder') }}" class="dropdown-item">Checkout</a>
                                 </div>
                             </div>
                             <a href="" class="nav-item nav-link">Contact</a>
@@ -154,20 +155,20 @@
                             @else
                                 <div class="nav-item dropdown">
                                     @auth
-                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-                                        {{ Auth::user()->name }}</a>
-                                    <div class="dropdown-menu rounded-0 m-0">
-                                        <a class="dropdown-item" href="{{ route('logout') }}"
-                                            onclick="event.preventDefault();
+                                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                                            {{ Auth::user()->name }}</a>
+                                        <div class="dropdown-menu rounded-0 m-0">
+                                            <a class="dropdown-item" href="{{ route('logout') }}"
+                                                onclick="event.preventDefault();
                                              document.getElementById('logout-form').submit();">
-                                            {{ __('Logout') }}
-                                        </a>
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                            class="d-none">
-                                            @csrf
-                                        </form>
-                                    </div>
-                                 @endauth
+                                                {{ __('Logout') }}
+                                            </a>
+                                            <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                                class="d-none">
+                                                @csrf
+                                            </form>
+                                        </div>
+                                    @endauth
                                 </div>
                             @endguest
                         </div>
@@ -186,7 +187,8 @@
                                     <h3 class="display-4 text-white font-weight-semi-bold mb-4">
                                         Fashionable Dress
                                     </h3>
-                                    <a href="" class="btn btn-light py-2 px-3">Shop Now</a>
+                                    <a href="{{ route('frontend.searchCategory', ['category' => 2]) }}"
+                                        class="btn btn-light py-2 px-3">Shop Now</a>
                                 </div>
                             </div>
                         </div>
@@ -200,7 +202,8 @@
                                     <h3 class="display-4 text-white font-weight-semi-bold mb-4">
                                         Reasonable Price
                                     </h3>
-                                    <a href="" class="btn btn-light py-2 px-3">Shop Now</a>
+                                    <a href="{{ route('frontend.searchCategory', ['category' => 2]) }}"
+                                        class="btn btn-light py-2 px-3">Shop Now</a>
                                 </div>
                             </div>
                         </div>
@@ -255,62 +258,27 @@
     <!-- Categories Start -->
     <div class="container-fluid pt-5">
         <div class="row px-xl-5 pb-3">
-            @foreach($category as $categories)
-            <div class="col-lg-4 col-md-6 pb-1">
-                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px">
-                    <p class="text-right">{{ countProducts($categories)}}</p>
-                    <a href="" class="cat-img position-relative overflow-hidden mb-3">
-                        <img class="img-fluid" src="img/cat-1.jpg" alt="" />
+            @foreach ($category as $categories)
+                <div class="col-lg-4 col-md-6 pb-1">
+                    <a href="{{route('frontend.searchCategory', ['category' => $categories->id,'slug'=>generateSlug($categories->category_name)])}}">
+                    <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px">
+                            <p class="text-right">
+                                @php $count=0; @endphp
+                                @foreach ($categories->descendants() as $child)
+                                    @php $count=$child->product()->count()+$count;@endphp
+                                @endforeach
+                                {{ $count }}
+                                Products
+                            </p>
+                            <a href="{{ route('frontend.searchCategory', ['category' => $categories->id,'slug'=>generateSlug($categories->category_name)]) }}"
+                                class="cat-img position-relative overflow-hidden mb-3">
+                                <img class="img-fluid" src="{{ url('/images/' . 'cat-6.jpg') }}" alt="" />
+                            </a>
+                            <h5 class="font-weight-semi-bold m-0">{{ $categories->category_name }}</h5>
+                        </div>
                     </a>
-                    <h5 class="font-weight-semi-bold m-0">{{$categories->category_name}}</h5>
                 </div>
-            </div>
             @endforeach
-            <div class="col-lg-4 col-md-6 pb-1">
-                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px">
-                    <p class="text-right">15 Products</p>
-                    <a href="" class="cat-img position-relative overflow-hidden mb-3">
-                        <img class="img-fluid" src="img/cat-2.jpg" alt="" />
-                    </a>
-                    <h5 class="font-weight-semi-bold m-0">Women's dresses</h5>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 pb-1">
-                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px">
-                    <p class="text-right">15 Products</p>
-                    <a href="" class="cat-img position-relative overflow-hidden mb-3">
-                        <img class="img-fluid" src="img/cat-3.jpg" alt="" />
-                    </a>
-                    <h5 class="font-weight-semi-bold m-0">Baby's dresses</h5>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 pb-1">
-                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px">
-                    <p class="text-right">15 Products</p>
-                    <a href="" class="cat-img position-relative overflow-hidden mb-3">
-                        <img class="img-fluid" src="img/cat-4.jpg" alt="" />
-                    </a>
-                    <h5 class="font-weight-semi-bold m-0">Accerssories</h5>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 pb-1">
-                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px">
-                    <p class="text-right">15 Products</p>
-                    <a href="" class="cat-img position-relative overflow-hidden mb-3">
-                        <img class="img-fluid" src="img/cat-5.jpg" alt="" />
-                    </a>
-                    <h5 class="font-weight-semi-bold m-0">Bags</h5>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 pb-1">
-                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px">
-                    <p class="text-right">15 Products</p>
-                    <a href="" class="cat-img position-relative overflow-hidden mb-3">
-                        <img class="img-fluid" src="img/cat-6.jpg" alt="" />
-                    </a>
-                    <h5 class="font-weight-semi-bold m-0">Shoes</h5>
-                </div>
-            </div>
         </div>
     </div>
     <!-- Categories End -->
@@ -355,7 +323,7 @@
                 </h2>
             </div>
             <div class="mb-4 mx-5">
-                <h3><a href="{{route('frontend.shop')}}">See more</a></h3>
+                <h3><a href="{{ route('frontend.shop') }}">See more</a></h3>
             </div>
         </div>
 
@@ -364,8 +332,11 @@
                 <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
                     <div class="card product-item border-0 mb-4">
                         <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                            <img class="img-fluid w-100" src="{{ url('/images/' . $products->image) }}" alt=""
-                                style=" min-height:200px; max-height: 200px" />
+                            <a
+                                href="{{ route('detail.show', ['product' => $products->id, 'slug' => generateSlug($products->name)]) }}">
+                                <img class="img-fluid w-100" src="{{ url('/images/' . $products->image) }}"
+                                    alt="" style=" min-height:200px; max-height: 200px" />
+                            </a>
                         </div>
                         <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
                             <h6 class="text-truncate mb-3">{{ $products->name }}</h6>
@@ -375,7 +346,7 @@
                             </div>
                         </div>
                         <div class="card-footer d-flex justify-content-between bg-light border">
-                            <a href="{{ route('detail.show', ['product' => $products->id]) }}"
+                            <a href="{{ route('detail.show', ['product' => $products->id, 'slug'=>generateSlug($products->name)]) }}"
                                 class="btn btn-sm text-dark p-0"><i
                                     class="fas fa-eye text-primary mr-1"></i>ViewDetail</a>
                             <form action="{{ route('carts.store') }}" method="post">
@@ -423,14 +394,14 @@
 
     <!-- Products Start -->
     <div class="container-fluid pt-5">
-       <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex justify-content-between align-items-center">
             <div class="text-center mb-8">
                 <h2 class="section-title px-5">
                     <span class="px-2">Just Arrived</span>
                 </h2>
             </div>
             <div class="mb-4 mx-5">
-                <h3><a href="{{route('frontend.shop')}}">See more</a></h3>
+                <h3><a href="{{ route('frontend.shop') }}">See more</a></h3>
             </div>
         </div>
         <div class="row px-xl-5 pb-3">
@@ -438,8 +409,10 @@
                 <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
                     <div class="card product-item border-0 mb-4">
                         <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                            <img class="img-fluid w-100" src="{{ url('/images/' . $products->image) }}" alt=""
-                                style=" min-height:200px; max-height: 200px" />
+                            <a href="{{ route('detail.show', ['product' => $products->id, 'slug' => generateSlug($products->name)]) }}">
+                                <img class="img-fluid w-100" src="{{ url('/images/' . $products->image) }}"
+                                    alt="" style=" min-height:200px; max-height: 200px" />
+                            </a>
                         </div>
                         <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
                             <h6 class="text-truncate mb-3">{{ $products->name }}</h6>
@@ -449,7 +422,7 @@
                             </div>
                         </div>
                         <div class="card-footer d-flex justify-content-between bg-light border">
-                            <a href="{{ route('detail.show', ['product' => $products->id]) }}"
+                            <a href="{{ route('detail.show', ['product' => $products->id, 'slug' => generateSlug($products->name)]) }}"
                                 class="btn btn-sm text-dark p-0"><i
                                     class="fas fa-eye text-primary mr-1"></i>ViewDetail</a>
                             <form action="{{ route('carts.store') }}" method="post">

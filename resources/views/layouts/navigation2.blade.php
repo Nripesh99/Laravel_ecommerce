@@ -52,8 +52,8 @@
         
         
         <div class="col-lg-3 col-6 text-right">
-            <a href="" class="btn border">
-                <i class="fas fa-heart text-primary"></i>
+            <a href="{{route('frontend.showOrder')}}" class="btn border">
+                <i class="fas fa-bell text-primary"></i>
                 <span class="badge"></span>
             </a>
             @auth
@@ -96,7 +96,7 @@
                                     <div
                                         class="dropdown-menu position-absolute bg-secondary border-0 rounded-0 w-100 m-0">
                                         @foreach ($categories->subcategory as $subcategory)
-                                        <a href="{{route('frontend.searchCategory', ['category' => $subcategory->id])}}"
+                                        <a href="{{ route('frontend.searchCategory', ['category' => $subcategory->id, 'slug' => generateSlug($subcategory->category_name)]) }}"
                                             class="dropdown-item">{{ $subcategory->category_name }}</a>
                                         @endforeach
                                     </div>

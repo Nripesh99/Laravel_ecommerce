@@ -178,7 +178,7 @@
                         <hr class="mt-0">
                         <div class="d-flex justify-content-between mb-3 pt-1">
                             <h6 class="font-weight-medium">Subtotal</h6>
-                            <h6 class="font-weight-medium">$s. {{$subtotal}}</h6>
+                            <h6 class="font-weight-medium">Rs. {{$subtotal}}</h6>
                         </div>
                         <div class="d-flex justify-content-between">
                             <h6 class="font-weight-medium">Shipping</h6>
@@ -188,7 +188,7 @@
                     <div class="card-footer border-secondary bg-transparent">
                         <div class="d-flex justify-content-between mt-2">
                             <h5 class="font-weight-bold">Total</h5>
-                            <h5 class="font-weight-bold" id="total">${{$subtotal}}</h5>
+                            <h5 class="font-weight-bold" id="total">Rs{{$subtotal}}</h5>
                         </div>
                     </div>
                 </div>

@@ -19,7 +19,7 @@
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="{{route('frontend.index')}}">Home</a></li>
                             @foreach($categoriesInBetween as $category_id =>$category_name)
-                            <li class="breadcrumb-item"><a href="{{route('frontend.searchCategory', ['category' => $category_id])}}">{{$category_name}}</a></li>
+                            <li class="breadcrumb-item"><a href="{{route('frontend.searchCategory', ['category' => $category_id,'slug'=>generateSlug($category_name)])}}">{{$category_name}}</a></li>
                             @endforeach
                         </ol>
                     </nav>
@@ -194,7 +194,9 @@
                         <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
                             <div class="card product-item border-0 mb-4">
                                 <div
+
                                     class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+
                                     <img class="img-fluid w-100" src="/images/{{ $products->image }}" alt=""
                                         style="min-height:200px; max-height: 200px" />
                                 </div>
@@ -205,7 +207,7 @@
                                     </div>
                                 </div>
                                 <div class="card-footer d-flex justify-content-between bg-light border">
-                                    <a href="/ecommerce/{{ $products->id }}" class="btn btn-sm text-dark p-0">
+                                    <a href="/ecommerce/{{ $products->id }}-{{generateSlug($products->name)}} " class="btn btn-sm text-dark p-0">
                                         <i class="fas fa-eye text-primary mr-1"></i>View Detail
                                     </a>
                                     <form action="{{ route('carts.store') }}" method="post">

@@ -217,6 +217,16 @@
     </div>
     <script>
        $(document).ready(function() {
+        function slugify(str) {
+  return String(str)
+    .normalize('NFKD') // split accented characters into their base characters and diacritical marks
+    .replace(/[\u0300-\u036f]/g, '') // remove all the accents, which happen to be all in the \u03xx UNICODE block.
+    .trim() // trim leading or trailing whitespace
+    .toLowerCase() // convert to lowercase
+    .replace(/[^a-z0-9 -]/g, '') // remove non-alphanumeric characters
+    .replace(/\s+/g, '-') // replace spaces with hyphens
+    .replace(/-+/g, '-'); // remove consecutive hyphens
+}
     function loadProducts(pageNumber) {
         $.ajax({
             url: "{{ route('frontend.shopajax') }}",
@@ -242,7 +252,7 @@
                                     </div>
                                 </div>
                                 <div class="card-footer d-flex justify-content-between bg-light border">
-                                    <a href="/ecommerce/${product.id}" class="btn btn-sm text-dark p-0">
+                                    <a href="/ecommerce/${product.id}-${slugify(product.name)}" class="btn btn-sm text-dark p-0">
                                         <i class="fas fa-eye text-primary mr-1"></i>View Detail
                                     </a>
                                     <form action="{{route('carts.store')}}" method="post">

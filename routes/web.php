@@ -35,13 +35,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/',[FrontendController::class,'index'])->name('frontend.index');
 Route::get('/order', [FrontendController::class, 'showOrder'])->name('frontend.showOrder');
-Route::get('/ecommerce/{product}',[FrontendController::class,'show'])->name('detail.show');
+Route::get('/ecommerce/{product}-{slug?}',[FrontendController::class,'show'])->name('detail.show');
 Route::get('/ecommerce/details/{detail}',[FrontendController::class,'checkout'])->name('frontend.checkout');
 Route::post('/checkout',[FrontendController::class,'orderStore'])->name('frontend.orderStore');
 Route::get('/shop',[FrontendController::class, 'shop'])->name('frontend.shop');
 Route::get('/shopajax',[FrontendController::class, 'shopajax'])->name('frontend.shopajax');
 Route::get('/search', [FrontendController::class, 'search'])->name('frontend.search');
-Route::get('/searchCategory/{category}', [FrontendController::class, 'searchCategory'])->name('frontend.searchCategory');
+Route::get('/searchCategory/{category}-{slug?}', [FrontendController::class, 'searchCategory'])->name('frontend.searchCategory');
 
 
 

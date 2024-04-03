@@ -13,17 +13,30 @@ function showTags()
     );
    return $tags;    
 }
-function str_limit($value, $limit = 100, $end = '...')
-    {
-        return Str::limit($value, $limit, $end);
-    }
-    function countProducts($category)
+function str_limit($value, $limit = 30, $end = '...')
     {
         
-        $count = $category->product()->count();
-        foreach ($category->descendants() as $child) {
-            $count += countProducts($child);
-        }
-    
-        return $count;
+        return Str::limit($value, $limit, $end);
     }
+    // function countProducts($category)
+    // {
+    //     // dd($category->toArray());
+    //     $count = 0;
+    //     foreach ($category->descendants() as $child) {
+            
+    //         $dataCount = $child->subcategory->toArray();
+    //         dd($dataCoun)
+    //         foreach($dataCount as $key => $value) {
+                
+    //             $count++;
+    //         }
+    //         // $count += countProducts($child);
+    //     }
+    //     dd($count);
+    
+    //     // return $count;
+    // }
+    function generateSlug($value)
+{
+    return Str::slug($value);
+}

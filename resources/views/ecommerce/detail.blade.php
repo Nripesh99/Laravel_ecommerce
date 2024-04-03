@@ -17,7 +17,7 @@
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="{{route('frontend.index')}}">Home</a></li>
                             @foreach($categoriesInBetween as $category_id =>$category_name)
-                            <li class="breadcrumb-item"><a href="{{route('frontend.searchCategory', ['category' => $category_id])}}">{{$category_name}}</a></li>
+                            <li class="breadcrumb-item"><a href="{{route('frontend.searchCategory', ['category' => $category_id,'slug'=>generateSlug($category_name)])}}">{{$category_name}}</a></li>
                             @endforeach
                             <li class="breadcrumb-item"><a href="#">{{$product->name}}</a></li>
 
@@ -61,7 +61,7 @@
             <div class="col-lg-7 pb-5">
                 <div class="d-flex">
                 <h3 class="font-weight-semi-bold d-flex">{{ $product->name }}</h3>
-                <small class="pt-1 d-flex mx-2">({{$product->SKU}})</small>
+                <small class="pt-1 d-flex mx-2">(SKU: {{$product->SKU}})</small>
                 </div>
                 <div class="d-flex mb-3">
                     <div class="text-primary mr-2">
@@ -175,8 +175,8 @@
                 <div class="d-flex pt-2">
                     <p class="text-dark font-weight-medium mb-0 mr-2">Category:</p>
                     <div class="d-inline-flex">
-                        <a class="text-dark  font-weight-bold" href="{{route('frontend.searchCategory', ['category' => $product->category->id])}}">
-                            {{$product->category->category_name}}
+                        <a class="text-dark  font-weight-bold" href="{{route('frontend.searchCategory', ['category' => $product->category->id,'slug'=>generateSlug($product->category->category_name)])}}">
+                            {{($product->category->category_name)}}
                         </a>
                     </div>
                 </div>
@@ -311,8 +311,11 @@
                         <div class="card product-item border-0">
                             <div
                                 class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                                <img class="img-fluid w-100" src="{{ url('/images/' . $allProducts->image) }}"
-                                    alt="" style=" min-height:200px; max-height: 200px" />
+                               <a href="{{ route('detail.show', ['product' => $allProducts->id, 'slug' => generateSlug($allProducts->name)]) }}">
+                                    <img class="img-fluid w-100" src="{{ url('/images/' . $allProducts->image) }}" alt=""
+                                        style=" min-height:200px; max-height: 200px" />
+                                   </a>
+                                
                             </div>
                             <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
                                 <h6 class="text-truncate mb-3">{{ $allProducts->name }}</h6>
@@ -321,7 +324,7 @@
                                 </div>
                             </div>
                             <div class="card-footer d-flex justify-content-between bg-light border">
-                                <a href="{{ route('detail.show', ['product' => $allProducts->id]) }}"
+                                <a href="{{ route('detail.show', ['product' => $allProducts->id, 'slug' => generateSlug($allProducts->name)]) }}"
                                     class="btn btn-sm text-dark p-0"><i
                                         class="fas fa-eye text-primary mr-1"></i>ViewDetail</a>
                                 <form action="{{ route('carts.store') }}" method="post">

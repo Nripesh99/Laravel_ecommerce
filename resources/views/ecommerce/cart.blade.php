@@ -98,17 +98,17 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between mb-3 pt-1">
                             <h6 class="font-weight-medium">Subtotal</h6>
-                            <h6 class="font-weight-medium"id="subtotal">Rs.0</h6>
+                            <h6 class="font-weight-medium"id="subtotal">$0</h6>
                         </div>
                         <div class="d-flex justify-content-between">
                             <h6 class="font-weight-medium">Shipping</h6>
-                            <h6 class="font-weight-medium">Rs.0</h6>
+                            <h6 class="font-weight-medium">Rs. 0</h6>
                         </div>
                     </div>
                     <div class="card-footer border-secondary bg-transparent">
                         <div class="d-flex justify-content-between mt-2">
                             <h5 class="font-weight-bold" >Total</h5>
-                            <h5 class="font-weight-bold"id='totalamt'>Rs.0</h5>
+                            <h5 class="font-weight-bold"id='totalamt'>$0</h5>
                         </div>
                         <a href="{{route('frontend.checkout',['detail'=>auth()->id()])}}" class="btn btn-block btn-primary my-3 py-3">
                             Proceed To Checkout
@@ -160,9 +160,9 @@ $(document).ready(function(){
     });
 
     // Function to update the total price for a given row
+    var subtotal = 0; 
+    var totalPrice =0
     function updateTotalPrice(cartId) {
-        var subtotal = 0; 
-        var totalPrice =0
         var price = parseInt($('#price_' + cartId).text());
         var quantity = parseInt($('#quantity_' + cartId).val());
         var totalPrice = price * quantity;
@@ -171,8 +171,8 @@ $(document).ready(function(){
         updateSubtotal(subtotal); // Update subtotal
      }
      function updateSubtotal(subtotal) {
-        $('#subtotal').text('$' + subtotal);
-        $('#totalamt').text('$' + subtotal);
+        $('#subtotal').text('Rs.' + subtotal);
+        $('#totalamt').text('Rs.' + subtotal);
 
     }
 
