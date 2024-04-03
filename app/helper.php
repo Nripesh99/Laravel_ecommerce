@@ -1,4 +1,6 @@
 <?php
+
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 function showTags()
 {
@@ -39,4 +41,9 @@ function str_limit($value, $limit = 30, $end = '...')
     function generateSlug($value)
 {
     return Str::slug($value);
+}
+function formatDate($dateString)
+{
+    $date = Carbon::parse($dateString);
+    return $date->format('jS F Y');
 }

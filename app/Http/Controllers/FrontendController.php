@@ -145,10 +145,15 @@ class FrontendController extends Controller
     public function showOrder()
     {
         $orderId = Order::where('user_id', auth()->id())->pluck('id')->toArray();
-        $order =Order_detail::whereIn('order_id', $orderId)->get();
+        $order =Order_detail::whereIn('order_id', $orderId)->orderByDesc('id')->paginate(10);
         $category = Category::all()->where('parent_id', null);
         $cartCount = Cart::where('user_id', auth()->id())->count();
         return view('ecommerce.order', compact('order', 'category','cartCount'));
+    }
+    public function contact(){
+        $category = Category::all()->where('parent_id', null);
+        $cartCount = Cart::where('user_id', auth()->id())->count();
+        return view('ecommerce.contact',compact('category', 'cartCount'));
     }
     /**
      * Show the form for editing the specified resource.

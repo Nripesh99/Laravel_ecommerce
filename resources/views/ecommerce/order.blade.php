@@ -35,6 +35,7 @@
                                         <th class="text-center">Prouct Image</th>
                                         <th class="text-center">Product Price</th>
                                         <th class="text-center">Product Quantity</th>
+                                        <th class="text-center">Order Date</th>
                                         <th class="text-center">Order By</th>
                                     </tr>
                                 </thead>
@@ -42,19 +43,18 @@
                                     @php
                                         $index = 1;
                                     @endphp
-                                    @foreach ($order as $order)
+                                    @foreach ($order as $orders)
                                         <tr>
                                             <td class="text-center">{{ $index }}</td>
-                                            <td class="text-center">{{ $order->products->name }}</td>
+                                            <td class="text-center">{{ $orders->products->name }}</td>
                                             <td class="img-fluid justify-content-center">
-                                                <img src="{{ url('/images/' . $order->products->image) }}" alt=""
-                                                    style="max-width:100%; max-height:100px;">
+                                                <img src="{{ url('/images/' . $orders->products->image) }}" alt=""
+                                                 style="max-width:100%; max-height:100px;">
                                             </td>
-
-                                            <td class="text-center">{{ $order->price }}</td>
-                                            <td class="text-center">{{ $order->quantity }}</td>
-                                            <td class="text-center">{{ $order->orders->user->name }}</td>
-
+                                            <td class="text-center">{{ $orders->price }}</td>
+                                            <td class="text-center">{{ $orders->quantity }}</td>
+                                            <td class="text-center">{{ formatDate($orders->created_at) }}</td>
+                                            <td class="text-center">{{ $orders->orders->user->name }}</td>
                                         </tr>
                                         @php
                                             $index++;
@@ -62,6 +62,9 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                        {{ $order->links() }}
                         </div>
                         <!-- /.card-body -->
                     </div>

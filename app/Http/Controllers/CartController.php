@@ -36,16 +36,17 @@ class CartController extends Controller
     {
         $request->validate([
             'user_id' => 'required|exists:users,id',
-            'product_id' => 'required|exists:products,id',
+            'product_id' => 'required|exists:products,id|min:1',
             'quantity' => 'required|integer|min:1',
         ]);
         // Find whether the product already exists in the cart
         $existingProduct = Cart::where('product_id', $request->input('product_id'))
-        ->where('user_id', $request->input('user_id'))
-        ->first();
-        
+            ->where('user_id', $request->input('user_id'))
+            ->first();
+
+
         // Find whether the user already exists
-        
+
         $existingPerson = User::find($request->input('user_id'));
 
         if ($existingProduct && $existingPerson) {
@@ -54,14 +55,16 @@ class CartController extends Controller
             if ($actualQuantity->quantity <= 0 || $request->input('quantity') > $actualQuantity->quantity) {
                 return back()->with('error', 'No stock present');
             }
-
+            if ($cart->quantity + $request->input('quantity') > $actualQuantity->quantity) {
+                return back()->with('error', 'Cart quantity greater than stock');
+            }
             $cart->quantity += $request->input('quantity');
             $cart->save();
-            return back()->with('success', 'Added to cart');
+            return back()->with('success', 'Added to the cart');
         } else {
             $cart = new Cart;
             $actualQuantity = Stock::where('product_id', $request->product_id)->first();
-            if($actualQuantity === null){
+            if ($actualQuantity === null) {
                 return back()->with('error', 'No stock present');
             }
             if ($actualQuantity->quantity <= 0 || $request->input('quantity') > $actualQuantity->quantity) {
@@ -82,13 +85,13 @@ class CartController extends Controller
      */
     public function show(string $id)
     {
-        $cart=Cart::all()->where('user_id', $id);
+        $cart = Cart::all()->where('user_id', $id);
         $category = Category::all()->where('parent_id', null);
         $cartCount = Cart::where('user_id', auth()->id())->count();
 
-        return view('ecommerce.cart', compact('cart','category','cartCount'));
+        return view('ecommerce.cart', compact('cart', 'category', 'cartCount'));
     }
- 
+
     /**
      * Show the form for editing the specified resource.
      */
@@ -122,7 +125,7 @@ class CartController extends Controller
         $existingCart->save();
         return back()->with('success', 'Cart item updated successfully');
     }
-    
+
 
     /**
      * Remove the specified resource from storage.

@@ -41,6 +41,9 @@ Route::post('/checkout',[FrontendController::class,'orderStore'])->name('fronten
 Route::get('/shop',[FrontendController::class, 'shop'])->name('frontend.shop');
 Route::get('/shopajax',[FrontendController::class, 'shopajax'])->name('frontend.shopajax');
 Route::get('/search', [FrontendController::class, 'search'])->name('frontend.search');
+Route::get('/contact', [FrontendController::class, 'contact'])->name('frontend.contact');
+
+
 Route::get('/searchCategory/{category}-{slug?}', [FrontendController::class, 'searchCategory'])->name('frontend.searchCategory');
 
 
