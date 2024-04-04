@@ -23,6 +23,7 @@ class ProcessEmail implements ShouldQueue
     public function __construct($orderdetail)
     {
         $this->orderdetail = $orderdetail;
+
     }
 
     /**
@@ -33,6 +34,7 @@ class ProcessEmail implements ShouldQueue
         $orderDetail=$this->orderdetail;
         $order=array();
         foreach($orderDetail as $orderd){
+    
             $order[]=Order_detail::findOrFail($orderd);
         }
         $user=User::findOrFail(auth()->id());

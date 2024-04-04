@@ -28,7 +28,7 @@ class Category extends Model
     public function descendants()
     {
         $descendants = collect([$this]);
-        
+ 
         $children = $this->hasMany(Category::class, 'parent_id')->get();
     
         foreach ($children as $child) {

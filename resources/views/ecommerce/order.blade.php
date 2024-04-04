@@ -51,7 +51,7 @@
                                                 <img src="{{ url('/images/' . $orders->products->image) }}" alt=""
                                                  style="max-width:100%; max-height:100px;">
                                             </td>
-                                            <td class="text-center">{{ $orders->price }}</td>
+                                            <td class="text-center">Rs. {{ $orders->price }}</td>
                                             <td class="text-center">{{ $orders->quantity }}</td>
                                             <td class="text-center">{{ formatDate($orders->created_at) }}</td>
                                             <td class="text-center">{{ $orders->orders->user->name }}</td>
