@@ -14,7 +14,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $order=Order_detail::all();
+        $order=Order_detail::paginate(10);
         return view('orders.index',['orders'=>$order]);
     }
 
@@ -49,7 +49,7 @@ class OrderController extends Controller
     public function show(string $id)
     {
         $order=Order::findOrFail($id);
-        $category=Category::all()->where('parent_id',null)->get();
+        $category=Category::all()->where('parent_id',null);
         return view('orders.show', ['order'=> $order],['category'=>$category]);
     }
 

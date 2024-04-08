@@ -54,6 +54,10 @@
                     </div>
                     <!-- /.card-body -->
                 </div>
+                <div class="d-flex justify-content-center">
+
+                    {{ $orders->links() }}
+                </div>
                 <!-- /.card -->
             </div>
             <!-- /.col -->

@@ -12,7 +12,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 
-class ProcessEmail implements ShouldQueue
+class ProcessingEmail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -20,9 +20,11 @@ class ProcessEmail implements ShouldQueue
      * Create a new job instance.
      */
     protected $orderdetail;
-    public function __construct($orderdetail)
+    protected $userEmail;
+    public function __construct($orderdetail,$userEmail)
     {
         $this->orderdetail = $orderdetail;
+        $this->userEmail = $userEmail;
         
 
     }
@@ -33,12 +35,13 @@ class ProcessEmail implements ShouldQueue
     public function handle(): void
     {
         $orderDetail=$this->orderdetail;
+        $userEmail=$this->userEmail;
         $order=array();
         foreach($orderDetail as $orderd){
     
             $order[] = Order_detail::where('id', $orderd)->get();
         }
-        $user=User::findOrFail(auth()->id());
-        Mail::to($user->email)->send(new OrderEmail($order));
+        $user=User::where('id',auth()->id());
+        Mail::to($userEmail)->send(new OrderEmail($order));
     }
 }

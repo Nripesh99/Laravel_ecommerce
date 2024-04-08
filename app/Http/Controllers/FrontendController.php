@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\ProcessEmail;
+use App\Jobs\ProcessingEmail;
 use App\Mail\OrderEmail;
 use App\Models\Cart;
 use App\Models\Category;
@@ -117,7 +117,10 @@ class FrontendController extends Controller
         foreach ($carts as $cart) {
             $cart->delete();
         }
-        ProcessEmail::dispatch($orderdetail);
+        $useremail=User::where('id', auth()->id())->first();
+        $userEmail=$useremail->email;
+        
+       ProcessingEmail::dispatch($orderdetail,$userEmail);
         return redirect()->route('frontend.showOrder')->with('success', 'Order placed successfully');
 
     }

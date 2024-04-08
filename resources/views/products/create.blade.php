@@ -1,6 +1,13 @@
 @extends('layouts.app')
-
 @section('content')
+<style>
+    #form {
+        margin: auto;
+        width: 58%;
+        padding: 10px;
+        height: 100%;
+    }
+</style>
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
@@ -63,29 +70,16 @@
         <button type="submit" id="submit" class="btn btn-primary">Add Product</button>
     </form>
 </div>
-@endsection
 
-@section('script')
 <script>
     $(document).ready(function() {
         $('.subCategoryOption').hide();
         $('#category').change(function() {
             var selectedCategoryId = $(this).val();
             $('.subCategoryOption').hide();
-            // Show only relevant subcategory options
             $('.subCategoryOption[data-parent-id="' + selectedCategoryId + '"]').show();
         });
     });
 </script>
-@endsection
 
-@section('style')
-<style>
-    #form {
-        margin: auto;
-        width: 50%;
-        padding: 10px;
-        height: 100%;
-    }
-</style>
 @endsection

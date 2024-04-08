@@ -165,13 +165,14 @@
                 <div class='row pb-3'>
                     <div class="col-12 pb-1">
                         <div class="d-flex align-items-center justify-content-between mb-4">
-                            <form action="">
+                            <form id="searchForm" action="{{ route('frontend.search') }}" method="get">
+                                @csrf
                                 <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Search by name" />
+                                    <input type="text" name="search" class="form-control" placeholder="Search...">
                                     <div class="input-group-append">
-                                        <span class="input-group-text bg-transparent text-primary">
+                                        <button type="submit" class="input-group-text  text-primary" style="cursor: pointer;">
                                             <i class="fa fa-search"></i>
-                                        </span>
+                                        </button>
                                     </div>
                                 </div>
                             </form>
@@ -234,21 +235,21 @@
     </div>
     </div>
     <script>
-        // $(document).ready(function() {
-        //     function searchProducts(searchQuery) {
-        //         $.ajax({
-        //             url: "{{ route('frontend.search') }}",
-        //             type: "POST",
-        //             data: {
-        //                 search: searchQuery,
-        //                 _token: $('input[name="_token"]').val()
-        //             },
-        //             dataType: "json",
-        //             success: function(data) {
-        //                 const products = data.product;
-        //                 let combinedHtml = '';
-        //                 products.forEach(function(product) {
-        //                     combinedHtml += `
+    // $(document).ready(function() {
+    //     function searchProducts(searchQuery) {
+    //         $.ajax({
+    //             url: "{{ route('frontend.search') }}",
+    //             type: "POST",
+    //             data: {
+    //                 search: searchQuery,
+    //                 _token: $('input[name="_token"]').val()
+    //             },
+    //             dataType: "json",
+    //             success: function(data) {
+    //                 const products = data.product;
+    //                 let combinedHtml = '';
+    //                 products.forEach(function(product) {
+    //                     combinedHtml += `
     //                 <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
     //                     <div class="card product-item border-0 mb-4">
     //                         <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
@@ -277,22 +278,22 @@
     //                     </div>
     //                 </div>
     //                 `;
-        //                 });
+    //                 });
 
-        //                 $('#productContainer').html(combinedHtml);
-        //             },
-        //             error: function(xhr, status, error) {
-        //                 console.error("Error searching products:", error);
-        //             }
-        //         });
-        //     }
-        //     $('#searchForm').submit(function(e) {
-        //         e.preventDefault(); // Prevent default form submission
-        //         var searchQuery = $('#searchInput').val(); // Get search query from input field
-        //         searchProducts(searchQuery); // Call function to search products
-        //     });
+    //                 $('#productContainer').html(combinedHtml);
+    //             },
+    //             error: function(xhr, status, error) {
+    //                 console.error("Error searching products:", error);
+    //             }
+    //         });
+    //     }
+    //     $('#searchForm').submit(function(e) {
+    //         e.preventDefault(); // Prevent default form submission
+    //         var searchQuery = $('#searchInput').val(); // Get search query from input field
+    //         searchProducts(searchQuery); // Call function to search products
+    //     });
 
-        // });
+    // });
     </script>
 
 @endsection

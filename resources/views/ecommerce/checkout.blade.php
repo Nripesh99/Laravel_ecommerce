@@ -188,7 +188,7 @@
                     <div class="card-footer border-secondary bg-transparent">
                         <div class="d-flex justify-content-between mt-2">
                             <h5 class="font-weight-bold">Total</h5>
-                            <h5 class="font-weight-bold" id="total">Rs{{$subtotal}}</h5>
+                            <h5 class="font-weight-bold" id="total">Rs. {{$subtotal}}</h5>
                         </div>
                     </div>
                 </div>

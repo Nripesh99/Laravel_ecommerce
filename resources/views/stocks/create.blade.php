@@ -30,7 +30,7 @@
         <select name="product" id="product" class="form-control" required>
             <option value="" selected disabled>Select Product</option>
             @foreach ($product as $products)
-                <option value="{{ $products->id }}">{{ $products->name }}</option>
+            <option value="{{ $products->id }}">{{ $products->name }}   ({{ isset($products->stock->quantity) ? $products->stock->quantity : 'N/A' }})</option>
             @endforeach
         </select>
         <label for="quantity">Add quantity</label>
