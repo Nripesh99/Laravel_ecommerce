@@ -12,17 +12,19 @@
             </div>
             <div class="col-sm-6">
                 <div class="float-sm-right mx-5" style="background-color: white !important">
-                    @if(Route::currentRouteName() === 'detail.show')
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{route('frontend.index')}}">Home</a></li>
-                            @foreach($categoriesInBetween as $category_id =>$category_name)
-                            <li class="breadcrumb-item"><a href="{{route('frontend.searchCategory', ['category' => $category_id,'slug'=>generateSlug($category_name)])}}">{{$category_name}}</a></li>
-                            @endforeach
-                            <li class="breadcrumb-item"><a href="#">{{$product->name}}</a></li>
+                    @if (Route::currentRouteName() === 'detail.show')
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="{{ route('frontend.index') }}">Home</a></li>
+                                @foreach ($categoriesInBetween as $category_id => $category_name)
+                                    <li class="breadcrumb-item"><a
+                                            href="{{ route('frontend.searchCategory', ['category' => $category_id, 'slug' => generateSlug($category_name)]) }}">{{ $category_name }}</a>
+                                    </li>
+                                @endforeach
+                                <li class="breadcrumb-item"><a href="#">{{ $product->name }}</a></li>
 
-                        </ol>
-                    </nav>
+                            </ol>
+                        </nav>
                     @endif
                 </div>
             </div>
@@ -60,8 +62,8 @@
 
             <div class="col-lg-7 pb-5">
                 <div class="d-flex">
-                <h3 class="font-weight-semi-bold d-flex">{{ $product->name }}</h3>
-                <small class="pt-1 d-flex mx-2">(SKU: {{$product->SKU}})</small>
+                    <h3 class="font-weight-semi-bold d-flex">{{ $product->name }}</h3>
+                    <small class="pt-1 d-flex mx-2">(SKU: {{ $product->SKU }})</small>
                 </div>
                 <div class="d-flex mb-3">
                     <div class="text-primary mr-2">
@@ -75,7 +77,8 @@
                 </div>
                 <div class="d-flex">
                     <h3 class="font-weight-semi-bold mb-4 d-flex">Rs {{ $product->price }} </h3>
-                    <small class="pt-1 d-flex mx-2">  (stock quantity: {{ isset($product->stock) ? $product->stock->quantity : '0' }})</small>
+                    <small class="pt-1 d-flex mx-2"> (stock quantity:
+                        {{ isset($product->stock) ? $product->stock->quantity : '0' }})</small>
                 </div>
                 <p class="mb-4">
                     {{ str_limit($product->product_description, 100) }}
@@ -157,26 +160,28 @@
                         </button>
                     </div>
                     @auth
-                    <form action="{{ route('carts.store') }}" method="post">
-                        @csrf
-                        <input type="hidden" name="product_id" id="product_id" value="{{ $product->id }}">
-                        <input type="hidden" name="user_id" id="user_id" value="{{ auth()->id() }}">
-                        <input type="hidden" name="quantity" id="qty" value="1">
+                        <form id="add-to-cart-form" action="{{ route('carts.store') }}" method="post">
+                            @csrf
+                            <input type="hidden" name="product_id" id="product_id" value="{{ $product->id }}">
+                            <input type="hidden" name="user_id" id="user_id" value="{{ auth()->id() }}">
+                            <input type="hidden" name="quantity" id="qty" value="1">
 
-                        <button type="submit" class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i> Add
-                            To Cart</button>
-                    </form>
+                            <button type="submit" class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i> Add
+                                To Cart</button>
+                        </form>
                     @endauth
                     @guest
-                    <a href="{{route('login')}}" class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i> Add
-                        To Cart</a>
+                        <a href="{{ route('login') }}" class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i>
+                            Add
+                            To Cart</a>
                     @endguest
                 </div>
                 <div class="d-flex pt-2">
                     <p class="text-dark font-weight-medium mb-0 mr-2">Category:</p>
                     <div class="d-inline-flex">
-                        <a class="text-dark  font-weight-bold" href="{{route('frontend.searchCategory', ['category' => $product->category->id,'slug'=>generateSlug($product->category->category_name)])}}">
-                            {{($product->category->category_name)}}
+                        <a class="text-dark  font-weight-bold"
+                            href="{{ route('frontend.searchCategory', ['category' => $product->category->id, 'slug' => generateSlug($product->category->category_name)]) }}">
+                            {{ $product->category->category_name }}
                         </a>
                     </div>
                 </div>
@@ -311,11 +316,12 @@
                         <div class="card product-item border-0">
                             <div
                                 class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                               <a href="{{ route('detail.show', ['product' => $allProducts->id, 'slug' => generateSlug($allProducts->name)]) }}">
-                                    <img class="img-fluid w-100" src="{{ url('/images/' . $allProducts->image) }}" alt=""
-                                        style=" min-height:200px; max-height: 200px" />
-                                   </a>
-                                
+                                <a
+                                    href="{{ route('detail.show', ['product' => $allProducts->id, 'slug' => generateSlug($allProducts->name)]) }}">
+                                    <img class="img-fluid w-100" src="{{ url('/images/' . $allProducts->image) }}"
+                                        alt="" style=" min-height:200px; max-height: 200px" />
+                                </a>
+
                             </div>
                             <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
                                 <h6 class="text-truncate mb-3">{{ $allProducts->name }}</h6>
@@ -327,7 +333,7 @@
                                 <a href="{{ route('detail.show', ['product' => $allProducts->id, 'slug' => generateSlug($allProducts->name)]) }}"
                                     class="btn btn-sm text-dark p-0"><i
                                         class="fas fa-eye text-primary mr-1"></i>ViewDetail</a>
-                                <form action="{{ route('carts.store') }}" method="post">
+                                <form id="add-to-cart-form" action="{{ route('carts.store') }}" method="post">
                                     @csrf
                                     <input type="hidden" name="product_id" id="product_id"
                                         value="{{ $allProducts->id }}">
@@ -372,6 +378,37 @@
                     quantity--;
                     updateQuantity(quantity);
                 }
+            });
+            $('#add-to-cart-form').on('submit', function(e) {
+                e.preventDefault(); // Prevent default form submission
+
+                // Extract product ID from form ID
+                var productId = this.id.split('_')[
+                1]; // Assuming your form IDs are in the format 'add-to-cart-form-_{productId}'
+
+                // Gather form data
+                var formData = $(this).serialize();
+
+                // Send AJAX request
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        // Display success message as a toaster notification
+                        if (response.status === 'success') {
+                            toastr.success(response.message);
+                        } else {
+                            toastr.error(response.message);
+                        }
+                        // location.reload(); // For demonstration purpose, you can update the cart UI instead
+                        // Refresh the page or update the cart UI as needed
+                    },
+                    error: function(xhr, status, error) {
+                        // Display error message as a toaster notification
+                        toastr.error(xhr.responseJSON.message);
+                    }
+                });
             });
             //function to go to the cart.
         });

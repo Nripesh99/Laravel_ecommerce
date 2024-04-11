@@ -49,7 +49,11 @@ class StockController extends Controller
             $stock->quantity=$request->input('quantity');
             $stock->save();
         }
-        return back()->with('success', 'Added the items');
+        $notification = array(
+            'message' => 'Added items stock ',
+            'alert-type' => 'success',
+        );
+        return back()->with($notification);
     }
 
     /**

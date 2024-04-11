@@ -121,7 +121,11 @@ class FrontendController extends Controller
         $userEmail=$useremail->email;
         
        ProcessingEmail::dispatch($orderdetail,$userEmail);
-        return redirect()->route('frontend.showOrder')->with('success', 'Order placed successfully');
+       $notification = array(
+        'message' => 'Order placed successfully',
+        'alert-type' => 'success'
+    );
+        return redirect()->route('frontend.showOrder')->with($notification);
 
     }
 
@@ -186,13 +190,9 @@ class FrontendController extends Controller
         $search = $request->search;
         $page = $request->page ?? 1;
         $perPage = 9;
-
         $offset = ($page - 1) * $perPage;
-
         $product = Product::where('name', 'LIKE', '%' . $search . '%')->paginate(9);
         // Calculate the total number of pages
-
-
         // You can retrieve categories and cart count if needed
         $category = Category::all()->where('parent_id', null);
         $cartCount = Cart::where('user_id', auth()->id())->count();
@@ -201,8 +201,6 @@ class FrontendController extends Controller
 
     public function searchCategory(Request $request)
     {
-
-       
         $category_id = $request->category;
         $category = Category::findOrFail($category_id);
         $categoryId = array();
@@ -215,6 +213,10 @@ class FrontendController extends Controller
         $categoriesInBetween = $subCategory->ancestors()->pluck('category_name', 'id');
         $cartCount = Cart::where('user_id', auth()->id())->count();
         return view('ecommerce.search', compact('product', 'category', 'categoriesInBetween','cartCount'));
+    }
+    public function CartCount() {
+        $cartCount = Cart::where('user_id', auth()->id())->count();
+        return response()->json($cartCount);
     }
 
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attribute;
 use App\Models\Product;
 use App\Models\Category;
 
@@ -20,7 +21,8 @@ class ProductController extends Controller
     public function create()
     {
         $categories=Category::all();
-        return view('products.create', compact('categories'));
+        $option=Attribute::all();
+        return view('products.create', compact('categories','option'));
     }
     public function store(Request $request) :RedirectResponse
     {
@@ -50,7 +52,11 @@ class ProductController extends Controller
         $addProduct->product_description = $request->input('product_description');
         $addProduct->save();
         // return redirect()->route('products.show', ['product' => $addProduct->id]);
-        return back()->with('success', 'added product succesfully');
+        $notification = array(
+            'message' => 'added product succesfully',
+            'alert-type' => 'success'
+        );
+        return back()->with($notification);
     }
     public function show(){
 
@@ -85,14 +91,22 @@ class ProductController extends Controller
         $product->SKU = $request->input('SKU');
         $product->product_description = $request->input('product_description');
         $product->save();
-        return redirect()->route('products.create')->with('success', 'Product updated successfully');
+        $notification = array(
+            'message' => 'Product updated successfully',
+            'alert-type' => 'success'
+        );
+        return redirect()->route('products.create')->with($notification);
     }
     
     public function delete($blog)
     {
         $post = Product::find($blog);
         $post->delete();
-        return redirect()->route('blogs.my')->with('error', 'deleted succesfully');
+        $notification = array(
+            'message' => 'delete successfully',
+            'alert-type' => 'error'
+        );
+        return redirect()->route('blogs.my')->with($notification);
     }
 }
 

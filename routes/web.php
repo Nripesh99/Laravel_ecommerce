@@ -42,6 +42,7 @@ Route::get('/shop',[FrontendController::class, 'shop'])->name('frontend.shop');
 Route::get('/shopajax',[FrontendController::class, 'shopajax'])->name('frontend.shopajax');
 Route::get('/search', [FrontendController::class, 'search'])->name('frontend.search');
 Route::get('/contact', [FrontendController::class, 'contact'])->name('frontend.contact');
+Route::get('cartCount', [FrontendController::class, 'cartCount'])->name('frontend.cartCount');
 
 
 Route::get('/searchCategory/{category}-{slug?}', [FrontendController::class, 'searchCategory'])->name('frontend.searchCategory');
@@ -101,7 +102,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('users', [\App\Http\Controllers\UserController::class, 'index'])->name('users.index');
 
-    Route::get('profile', [\App\Http\Controllers\ProfileController::class, 'show'])->name('profile.show');
+    Route::get('profile', [ProfileController::class, 'show'])->name('profile.show');
     // Route::put('profile', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
 });
 

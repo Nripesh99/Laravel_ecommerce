@@ -193,8 +193,8 @@
                                 @endphp
                                 @for ($i = 1; $i <= $pageCount; $i++)
                                     <li class="page-item ">
-                                         <a class="page-link"
-                                            href="{{ route('frontend.shop', ['page' => $counter]) }}">{{ $counter }}</a> 
+                                        <a class="page-link"
+                                            href="{{ route('frontend.shop', ['page' => $counter]) }}">{{ $counter }}</a>
                                         {{-- <a class="page-link">{{ $counter }}</a> --}}
                                     </li>
                                     @php
@@ -216,30 +216,33 @@
     </div>
     </div>
     <script>
-       $(document).ready(function() {
-        function slugify(str) {
-  return String(str)
-    .normalize('NFKD') // split accented characters into their base characters and diacritical marks
-    .replace(/[\u0300-\u036f]/g, '') // remove all the accents, which happen to be all in the \u03xx UNICODE block.
-    .trim() // trim leading or trailing whitespace
-    .toLowerCase() // convert to lowercase
-    .replace(/[^a-z0-9 -]/g, '') // remove non-alphanumeric characters
-    .replace(/\s+/g, '-') // replace spaces with hyphens
-    .replace(/-+/g, '-'); // remove consecutive hyphens
-}
-    function loadProducts(pageNumber) {
-        $.ajax({
-            url: "{{ route('frontend.shopajax') }}",
-            type: "GET",
-            data: {
-                page: pageNumber
-            },
-            dataType: "json",
-            success: function(data) {
-                const products = data.product;
-                let combinedHtml = '';
-                products.forEach(function(product) {
-                    combinedHtml += `
+$(document).ready(function() {
+// Function to handle form submission
+            function slugify(str) {
+                return String(str)
+                    .normalize('NFKD') // split accented characters into their base characters and diacritical marks
+                    .replace(/[\u0300-\u036f]/g,
+                        '') // remove all the accents, which happen to be all in the \u03xx UNICODE block.
+                    .trim() // trim leading or trailing whitespace
+                    .toLowerCase() // convert to lowercase
+                    .replace(/[^a-z0-9 -]/g, '') // remove non-alphanumeric characters
+                    .replace(/\s+/g, '-') // replace spaces with hyphens
+                    .replace(/-+/g, '-'); // remove consecutive hyphens
+            }
+
+            function loadProducts(pageNumber) {
+                $.ajax({
+                    url: "{{ route('frontend.shopajax') }}",
+                    type: "GET",
+                    data: {
+                        page: pageNumber
+                    },
+                    dataType: "json",
+                    success: function(data) {
+                        const products = data.product;
+                        let combinedHtml = '';
+                        products.forEach(function(product) {
+                            combinedHtml += `
                         <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
                             <div class="card product-item border-0 mb-4">
                                 <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
@@ -255,12 +258,12 @@
                                     <a href="/ecommerce/${product.id}-${slugify(product.name)}" class="btn btn-sm text-dark p-0">
                                         <i class="fas fa-eye text-primary mr-1"></i>View Detail
                                     </a>
-                                    <form action="{{route('carts.store')}}" method="post">
+                                    <form id= "add-to-cart-form-_${product.id}" action="{{ route('carts.store') }}" method="post">
                                         @csrf
                                         <input type="hidden" name="product_id" value="${product.id}">
                                         <input type="hidden" name="user_id" value="${product.user_id}">
                                         <input type="hidden" name="quantity" value="1">
-                                        <button type="submit" class="btn btn-sm text-dark p-0">
+                                        <button type="submit"  class="btn btn-sm text-dark p-0">
                                             <i class="fas fa-shopping-cart text-primary mr-1"></i>Add Cart
                                         </button>
                                     </form>
@@ -268,30 +271,49 @@
                             </div>
                         </div>
                     `;
-                });
+                        });
 
-                $('#productContainer').html(combinedHtml);
+                        $('#productContainer').html(combinedHtml);
+                    },
+                    error: function(xhr, status, error) {
+                        console.log("error", error);
+                        // Handle error if any
+                    }
+                });
+            }
+
+
+            // Call the function with page number 1
+            loadProducts(1);
+
+            // Event listener for page links
+            $(document).on('click', '.page-link', function(e) {
+                e.preventDefault(); // Prevent default click behavior
+
+                var pageNumber = $(this).text(); // Extract page number from link text
+                loadProducts(pageNumber);
+
+            });
+            $('[id^="add-to-cart-form-"]').on('submit', function(e) {
+        console.log("Form submission");
+        e.preventDefault(); // Prevent default form submission
+        var form = $(this);
+        var formData = form.serialize(); // Serialize form data
+        $.ajax({
+            url: form.attr('action'),
+            type: form.attr('method'),
+            data: formData,
+            success: function(response) {
+                // Handle success response
+                toastr.success(response);
             },
             error: function(xhr, status, error) {
-                console.log("error", error);
+                toastr.error(" ", error);
                 // Handle error if any
             }
         });
-    }
-  
-
-    // Call the function with page number 1
-    loadProducts(1);
-
-    // Event listener for page links
-    $(document).on('click', '.page-link', function(e) {
-        e.preventDefault(); // Prevent default click behavior
-        var pageNumber = $(this).text(); // Extract page number from link text
-        loadProducts(pageNumber);
     });
-
-});
-
+        });
     </script>
 
 @endsection

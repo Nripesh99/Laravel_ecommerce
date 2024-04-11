@@ -62,8 +62,8 @@
                 @auth
                 <a href="{{ route('carts.show', ['cart' => auth()->id()]) }}" class="btn border">
                     <i class="fas fa-shopping-cart text-primary"></i>
-                        <span class="badge"><small class="font-weight-bold">{{ $cartCount }}</small></span>
-                    </a>
+                    <span class="badge" id="cartCount"></span>
+                </a>
                 @endauth
                 @guest
                     <a href="{{ route('frontend.index') }}" class="btn border">
@@ -349,7 +349,7 @@
                             <a href="{{ route('detail.show', ['product' => $products->id, 'slug'=>generateSlug($products->name)]) }}"
                                 class="btn btn-sm text-dark p-0"><i
                                     class="fas fa-eye text-primary mr-1"></i>ViewDetail</a>
-                            <form action="{{ route('carts.store') }}" method="post">
+                            <form id="add-to-cart-form-_{{$products->id}}" action="{{ route('carts.store') }}" method="post">
                                 @csrf
                                 <input type="hidden" name="product_id" id="product_id" value="{{ $products->id }}">
                                 <input type="hidden" name="user_id" id="user_id" value="{{ auth()->id() }}">
@@ -425,7 +425,7 @@
                             <a href="{{ route('detail.show', ['product' => $products->id, 'slug' => generateSlug($products->name)]) }}"
                                 class="btn btn-sm text-dark p-0"><i
                                     class="fas fa-eye text-primary mr-1"></i>ViewDetail</a>
-                            <form action="{{ route('carts.store') }}" method="post">
+                            <form id="add-to-cart-form-_{{$products->id}}" action="{{ route('carts.store') }}" method="post">
                                 @csrf
                                 <input type="hidden" name="product_id" id="product_id" value="{{ $products->id }}">
                                 <input type="hidden" name="user_id" id="user_id" value="{{ auth()->id() }}">
@@ -467,4 +467,57 @@
         </div>
     </div>
     <!-- Vendor End -->
+    <script>
+$(document).ready(function() {
+    $('[id^="add-to-cart-form-"]').on('submit', function(e) {
+        e.preventDefault(); // Prevent default form submission
+        
+        // Extract product ID from form ID
+        var productId = this.id.split('_')[1]; // Assuming your form IDs are in the format 'add-to-cart-form-_{productId}'
+        
+        // Gather form data
+        var formData = $(this).serialize();
+
+        // Send AJAX request
+        $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            data: formData + '&product_id=' + productId, // Include product ID in the form data
+            success: function(response) {
+                // Display success message as a toaster notification
+                if (response.status === 'success') {
+                    toastr.success(response.message);
+                    updateCartCount();
+                } else {
+                    toastr.error(response.message);
+                    updateCartCount();
+
+                }
+            },
+            error: function(xhr, status, error) {
+                toastr.error(xhr.responseJSON.message);
+                updateCartCount();
+
+            }
+        });
+    });
+            // Function to update cart count
+            function updateCartCount() {
+                $.ajax({
+                    url: "{{route('frontend.cartCount')}}", // Replace with your server endpoint
+                    type: 'GET',
+                    success: function(data) {
+                        console.log(data);  
+                        $('#cartCount').text(JSON.stringify(data));
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error fetching cart count:', error);
+                    }
+                });
+            }
+            updateCartCount();
+        });
+
+
+    </script>
 @endsection

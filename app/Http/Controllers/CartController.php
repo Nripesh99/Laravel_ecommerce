@@ -39,43 +39,41 @@ class CartController extends Controller
             'product_id' => 'required|exists:products,id|min:1',
             'quantity' => 'required|integer|min:1',
         ]);
-        // Find whether the product already exists in the cart
+    
         $existingProduct = Cart::where('product_id', $request->input('product_id'))
-            ->where('user_id', $request->input('user_id'))
-            ->first();
-
-
-        // Find whether the user already exists
-
+                                ->where('user_id', $request->input('user_id'))
+                                ->first();
+    
         $existingPerson = User::find($request->input('user_id'));
-
+    
         if ($existingProduct && $existingPerson) {
             $cart = $existingProduct;
-            $actualQuantity = Stock::where('product_id', $request->product_id)->first();
+            $actualQuantity = Stock::where('product_id', $request->input('product_id'))->first();
+    
             if ($actualQuantity->quantity <= 0 || $request->input('quantity') > $actualQuantity->quantity) {
-                return back()->with('error', 'No stock present');
+                return response()->json(['message' => 'No stock present', 'status' => 'error']);
             }
+    
             if ($cart->quantity + $request->input('quantity') > $actualQuantity->quantity) {
-                return back()->with('error', 'Cart quantity greater than stock');
+                return response()->json(['message' => 'Cart quantity greater than stock', 'status' => 'error']);
             }
+    
             $cart->quantity += $request->input('quantity');
             $cart->save();
-            return back()->with('success', 'Added to the cart');
+            return response()->json(['message' => 'Added to cart', 'status' => 'success']);
         } else {
             $cart = new Cart;
-            $actualQuantity = Stock::where('product_id', $request->product_id)->first();
-            if ($actualQuantity === null) {
-                return back()->with('error', 'No stock present');
+            $actualQuantity = Stock::where('product_id', $request->input('product_id'))->first();
+    
+            if ($actualQuantity === null || $actualQuantity->quantity <= 0 || $request->input('quantity') > $actualQuantity->quantity) {
+                return response()->json(['message' => 'No stock present', 'status' => 'error']);
             }
-            if ($actualQuantity->quantity <= 0 || $request->input('quantity') > $actualQuantity->quantity) {
-                return back()->with('error', 'No stock present');
-            }
-
+    
             $cart->user_id = $request->input('user_id');
             $cart->product_id = $request->input('product_id');
             $cart->quantity += $request->input('quantity');
             $cart->save();
-            return back()->with('success', 'Added to cart');
+            return response()->json(['message' => 'Added to cart', 'status' => 'success']);
         }
     }
 
@@ -111,21 +109,36 @@ class CartController extends Controller
         // Find the existing cart item
         $existingCart = Cart::find($cart->id);
         if (!$existingCart) {
-            return back()->with('error', 'Cart item not found');
+            $notification = array(
+                'message' => 'Cart item not found',
+                'alert-type' => 'error'
+            );
+            return back()->with($notification);
         }
         // Find the stock for the product
         $actualQuantity = Stock::where('product_id', $existingCart->product_id)->first();
         if ($actualQuantity === null) {
-            return back()->with('error', 'No stock present');
+            $notification = array(
+                'message' => 'No stock present',
+                'alert-type' => 'error'
+            );
+            return back()->with($notification);
         }
         if ($actualQuantity->quantity <= 0 || $request->quantity > $actualQuantity->quantity) {
-            return back()->with('error', 'Not enough stock available');
+            $notification = array(
+                'message' => 'Not enough stock available',
+                'alert-type' => 'error'
+            );
+            return back()->with($notification);
         }
         $existingCart->quantity = $request->quantity;
         $existingCart->save();
-        return back()->with('success', 'Cart item updated successfully');
+        $notification = array(
+            'message' => 'Cart item updated successfully',
+            'alert-type' =>'success'
+        );
+        return back()->with($notification);
     }
-
 
     /**
      * Remove the specified resource from storage.
@@ -134,6 +147,10 @@ class CartController extends Controller
     {
         $cart = Cart::findOrFail($id);
         $cart->delete();
-        return redirect()->back()->with('error', 'deleted succesfully');
+        $notification = array(
+            'message' => 'deleted succesfully',
+            'alert-type' => 'error'
+        );
+        return redirect()->back()->with($notification);
     }
 }

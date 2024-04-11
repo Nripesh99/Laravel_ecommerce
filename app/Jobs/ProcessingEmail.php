@@ -36,10 +36,11 @@ class ProcessingEmail implements ShouldQueue
     {
         $orderDetail=$this->orderdetail;
         $userEmail=$this->userEmail;
-        $order=array();
+        // $order=array();
+        // $order;
         foreach($orderDetail as $orderd){
     
-            $order[] = Order_detail::where('id', $orderd)->get();
+            $order[] = Order_detail::where('id', $orderd)->first();
         }
         $user=User::where('id',auth()->id());
         Mail::to($userEmail)->send(new OrderEmail($order));

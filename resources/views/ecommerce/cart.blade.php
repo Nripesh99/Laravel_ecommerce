@@ -160,9 +160,9 @@ $(document).ready(function(){
     });
 
     // Function to update the total price for a given row
-    var subtotal = 0; 
-    var totalPrice =0
+    var subtotal = 0;
     function updateTotalPrice(cartId) {
+        var totalPrice =0;
         var price = parseInt($('#price_' + cartId).text());
         var quantity = parseInt($('#quantity_' + cartId).val());
         var totalPrice = price * quantity;

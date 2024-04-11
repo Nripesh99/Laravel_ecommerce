@@ -14,24 +14,28 @@
             <div class="col-sm-6">
                 <div class="float-sm-right mx-5" style="background-color: white !important">
                     <!-- Content goes here -->
-                    @if(Route::currentRouteName() === 'frontend.searchCategory')
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{route('frontend.index')}}">Home</a></li>
-                            @foreach($categoriesInBetween as $category_id =>$category_name)
-                            <li class="breadcrumb-item"><a href="{{route('frontend.searchCategory', ['category' => $category_id,'slug'=>generateSlug($category_name)])}}">{{$category_name}}</a></li>
-                            @endforeach
-                        </ol>
-                    </nav>
+                    @if (Route::currentRouteName() === 'frontend.searchCategory')
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="{{ route('frontend.index') }}">Home</a></li>
+                                @foreach ($categoriesInBetween as $category_id => $category_name)
+                                    <li class="breadcrumb-item"><a
+                                            href="{{ route('frontend.searchCategory', ['category' => $category_id, 'slug' => generateSlug($category_name)]) }}">{{ $category_name }}</a>
+                                    </li>
+                                @endforeach
+                            </ol>
+                        </nav>
                     @endif
-                    @if(Route::currentRouteName() === 'frontend.search')
-                    <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{route('frontend.index')}}">Home</a></li>
-                        <li class="breadcrumb-item"><a href="{{route('frontend.search',['search'=>$search])}}"><small>Product like </small> {{$search}}</a></li>
-                    </ol>
-                </nav>
-                @endif
+                    @if (Route::currentRouteName() === 'frontend.search')
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="{{ route('frontend.index') }}">Home</a></li>
+                                <li class="breadcrumb-item"><a
+                                        href="{{ route('frontend.search', ['search' => $search]) }}"><small>Product like
+                                        </small> {{ $search }}</a></li>
+                            </ol>
+                        </nav>
+                    @endif
                 </div>
             </div>
         </div>
@@ -170,7 +174,8 @@
                                 <div class="input-group">
                                     <input type="text" name="search" class="form-control" placeholder="Search...">
                                     <div class="input-group-append">
-                                        <button type="submit" class="input-group-text  text-primary" style="cursor: pointer;">
+                                        <button type="submit" class="input-group-text  text-primary"
+                                            style="cursor: pointer;">
                                             <i class="fa fa-search"></i>
                                         </button>
                                     </div>
@@ -195,11 +200,10 @@
                         <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
                             <div class="card product-item border-0 mb-4">
                                 <div
-
                                     class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
 
                                     <img class="img-fluid w-100" src="/images/{{ $products->image }}" alt=""
-                                        style="min-height:200px; max-height: 200px" />
+                                        style="height: 100%; width: 100%; min-height: 200px; max-height: 200px;" />
                                 </div>
                                 <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
                                     <h6 class="text-truncate mb-3">{{ $products->name }}</h6>
@@ -208,10 +212,12 @@
                                     </div>
                                 </div>
                                 <div class="card-footer d-flex justify-content-between bg-light border">
-                                    <a href="/ecommerce/{{ $products->id }}-{{generateSlug($products->name)}} " class="btn btn-sm text-dark p-0">
+                                    <a href="/ecommerce/{{ $products->id }}-{{ generateSlug($products->name) }} "
+                                        class="btn btn-sm text-dark p-0">
                                         <i class="fas fa-eye text-primary mr-1"></i>View Detail
                                     </a>
-                                    <form action="{{ route('carts.store') }}" method="post">
+                                    <form id="add-to-cart-form-_{{ $products->id }}" action="{{ route('carts.store') }}"
+                                        method="post">
                                         @csrf
                                         <input type="hidden" name="product_id" value="{{ $products->id }}">
                                         <input type="hidden" name="user_id" value="{{ $products->user_id }}">
@@ -226,7 +232,6 @@
                     @endforeach
                 </div>
                 <div class="d-flex justify-content-center">
-
                     {{ $product->links() }}
                 </div>
             </div>
@@ -234,68 +239,7 @@
         <!-- Shop Product End -->
     </div>
     </div>
-    <script>
-    // $(document).ready(function() {
-    //     function searchProducts(searchQuery) {
-    //         $.ajax({
-    //             url: "{{ route('frontend.search') }}",
-    //             type: "POST",
-    //             data: {
-    //                 search: searchQuery,
-    //                 _token: $('input[name="_token"]').val()
-    //             },
-    //             dataType: "json",
-    //             success: function(data) {
-    //                 const products = data.product;
-    //                 let combinedHtml = '';
-    //                 products.forEach(function(product) {
-    //                     combinedHtml += `
-    //                 <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
-    //                     <div class="card product-item border-0 mb-4">
-    //                         <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-    //                             <img class="img-fluid w-100" src="/images/${product.image}" alt="" style="min-height:200px; max-height: 200px" />
-    //                         </div>
-    //                         <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-    //                             <h6 class="text-truncate mb-3">${product.name}</h6>
-    //                             <div class="d-flex justify-content-center">
-    //                                 <h6>${product.price}</h6>
-    //                             </div>
-    //                         </div>
-    //                         <div class="card-footer d-flex justify-content-between bg-light border">
-    //                             <a href="/ecommerce/${product.id}" class="btn btn-sm text-dark p-0">
-    //                                 <i class="fas fa-eye text-primary mr-1"></i>View Detail
-    //                             </a>
-    //                             <form action="{{ route('carts.store') }}" method="post">
-    //                                 @csrf
-    //                                 <input type="hidden" name="product_id" value="${product.id}">
-    //                                 <input type="hidden" name="user_id" value="${product.user_id}">
-    //                                 <input type="hidden" name="quantity" value="1">
-    //                                 <button type="submit" class="btn btn-sm text-dark p-0">
-    //                                     <i class="fas fa-shopping-cart text-primary mr-1"></i>Add Cart
-    //                                 </button>
-    //                             </form>
-    //                         </div>
-    //                     </div>
-    //                 </div>
-    //                 `;
-    //                 });
-
-    //                 $('#productContainer').html(combinedHtml);
-    //             },
-    //             error: function(xhr, status, error) {
-    //                 console.error("Error searching products:", error);
-    //             }
-    //         });
-    //     }
-    //     $('#searchForm').submit(function(e) {
-    //         e.preventDefault(); // Prevent default form submission
-    //         var searchQuery = $('#searchInput').val(); // Get search query from input field
-    //         searchProducts(searchQuery); // Call function to search products
-    //     });
-
-    // });
-    </script>
-
+    <script></script>
 @endsection
 
 <!-- Shop End -->

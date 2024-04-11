@@ -40,7 +40,8 @@
             <form id="searchForm" action="{{ route('frontend.search') }}" method="get">
                 @csrf
                 <div class="input-group">
-                    <input id="searchInput" type="text" class="form-control" placeholder="Search for products" name="search">
+                    <input id="searchInput" type="text" class="form-control" placeholder="Search for products"
+                        name="search">
                     <div class="input-group-append">
                         <button id="searchButton" class="btn btn-primary" type="button">
                             <i class="fa fa-search"></i>
@@ -49,17 +50,17 @@
                 </div>
             </form>
         </div>
-        
-        
+
+
         <div class="col-lg-3 col-6 text-right">
-            <a href="{{route('frontend.showOrder')}}" class="btn border">
+            <a href="{{ route('frontend.showOrder') }}" class="btn border">
                 <i class="fas fa-bell text-primary"></i>
                 <span class="badge"></span>
             </a>
             @auth
                 <a href="{{ route('carts.show', ['cart' => auth()->id()]) }}" class="btn border">
                     <i class="fas fa-shopping-cart text-primary"></i>
-                    <span class="badge">{{$cartCount}}</span>
+                    <span class="badge" id="cartCount"></span>
                 </a>
             @endauth
             @guest
@@ -96,8 +97,8 @@
                                     <div
                                         class="dropdown-menu position-absolute bg-secondary border-0 rounded-0 w-100 m-0">
                                         @foreach ($categories->subcategory as $subcategory)
-                                        <a href="{{ route('frontend.searchCategory', ['category' => $subcategory->id, 'slug' => generateSlug($subcategory->category_name)]) }}"
-                                            class="dropdown-item">{{ $subcategory->category_name }}</a>
+                                            <a href="{{ route('frontend.searchCategory', ['category' => $subcategory->id, 'slug' => generateSlug($subcategory->category_name)]) }}"
+                                                class="dropdown-item">{{ $subcategory->category_name }}</a>
                                         @endforeach
                                     </div>
                                 </div>
@@ -137,7 +138,7 @@
                                 <a href="checkout.html" class="dropdown-item">Checkout</a>
                             </div>
                         </div>
-                        <a href="{{route('frontend.contact')}}" class="nav-item nav-link">Contact</a>
+                        <a href="{{ route('frontend.contact') }}" class="nav-item nav-link">Contact</a>
                     </div>
                     <div class="navbar-nav ml-auto py-0">
                         @guest
@@ -155,29 +156,77 @@
                         @else
                             <div class="nav-item dropdown">
                                 @auth
-                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-                                    {{ Auth::user()->name }}</a>
-                                <div class="dropdown-menu rounded-0 m-0">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                        onclick="event.preventDefault();
+                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                                        {{ Auth::user()->name }}</a>
+                                    <div class="dropdown-menu rounded-0 m-0">
+                                        <a class="dropdown-item" href="{{ route('logout') }}"
+                                            onclick="event.preventDefault();
                                          document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                        class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
-                             @endauth
-                                </div>
+                                            {{ __('Logout') }}
+                                        </a>
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                            class="d-none">
+                                            @csrf
+                                        </form>
+                                    </div>
+                                @endauth
                             </div>
-                        @endguest
-                    </div>
+                        </div>
+                    @endguest
                 </div>
-            </nav>
         </div>
+        </nav>
     </div>
 </div>
+</div>
 <script>
-</script>
+    $(document).ready(function() {
+        // Function to update cart count
+        function updateCartCount() {
+            $.ajax({
+                url: "{{ route('frontend.cartCount') }}", // Replace with your server endpoint
+                type: 'GET',
+                success: function(data) {
+                    console.log(data);
+                    $('#cartCount').text(JSON.stringify(data));
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching cart count:', error);
+                }
+            });
+        }
 
+        // Call updateCartCount initially and then every 5 seconds
+        updateCartCount();
+
+        $('[id^="add-to-cart-form-"]').on('submit', function(e) {
+            e.preventDefault(); // Prevent default form submission
+            // Extract product ID from form ID
+            var productId = this.id.split('_')[1]; // Assuming your form IDs are in the format 'add-to-cart-form-_{productId}'
+            // Gather form data
+            var formData = $(this).serialize();
+
+            // Send AJAX request
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'POST',
+                data: formData + '&product_id=' +
+                productId, // Include product ID in the form data
+                success: function(response) {
+                    // Display success message as a toaster notification
+                    if (response.status === 'success') {
+                        toastr.success(response.message);
+                        updateCartCount();
+
+                    } else {
+                        toastr.error(response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    // Display error message as a toaster notification
+                    toastr.error(xhr.responseJSON.message);
+                }
+            });
+        });
+    });
+</script>
