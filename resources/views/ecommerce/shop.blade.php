@@ -216,8 +216,8 @@
     </div>
     </div>
     <script>
-$(document).ready(function() {
-// Function to handle form submission
+        $(document).ready(function() {
+            // Function to handle form submission
             function slugify(str) {
                 return String(str)
                     .normalize('NFKD') // split accented characters into their base characters and diacritical marks
@@ -258,15 +258,15 @@ $(document).ready(function() {
                                     <a href="/ecommerce/${product.id}-${slugify(product.name)}" class="btn btn-sm text-dark p-0">
                                         <i class="fas fa-eye text-primary mr-1"></i>View Detail
                                     </a>
-                                    <form id= "add-to-cart-form-_${product.id}" action="{{ route('carts.store') }}" method="post">
-                                        @csrf
-                                        <input type="hidden" name="product_id" value="${product.id}">
-                                        <input type="hidden" name="user_id" value="${product.user_id}">
-                                        <input type="hidden" name="quantity" value="1">
-                                        <button type="submit"  class="btn btn-sm text-dark p-0">
-                                            <i class="fas fa-shopping-cart text-primary mr-1"></i>Add Cart
-                                        </button>
-                                    </form>
+                                    <form id="add-to-cart-form-_${product.id}">
+                                            @csrf
+                                            <input type="hidden" name="product_id" value="${product.id}">
+                                            <input type="hidden" name="user_id" value="${product.user_id}">
+                                            <input type="hidden" name="quantity" value="1">
+                                            <button type="submit"  class="btn btn-sm text-dark p-0">
+                                                <i class="fas fa-shopping-cart text-primary mr-1"></i>Add Cart
+                                            </button>
+                                        </form>
                                 </div>
                             </div>
                         </div>
@@ -294,25 +294,55 @@ $(document).ready(function() {
                 loadProducts(pageNumber);
 
             });
-            $('[id^="add-to-cart-form-"]').on('submit', function(e) {
-        console.log("Form submission");
-        e.preventDefault(); // Prevent default form submission
-        var form = $(this);
-        var formData = form.serialize(); // Serialize form data
-        $.ajax({
-            url: form.attr('action'),
-            type: form.attr('method'),
-            data: formData,
-            success: function(response) {
-                // Handle success response
-                toastr.success(response);
-            },
-            error: function(xhr, status, error) {
-                toastr.error(" ", error);
-                // Handle error if any
+
+            function handleFormSubmission() {
+
+                $('[id^="add-to-cart-form-"]').on('submit', function(e) {
+                    console.log("Form submission");
+                    var productId = this.id.split('_')[1]; // Assuming your form IDs are in the format 'add-to-cart-form-_{productId}'
+                    e.preventDefault(); // Prevent default form submission
+                    var form = $(this);
+                    var formData = form.serialize(); // Serialize form data
+                    $.ajax({
+                        url: "{{ route('carts.store') }}",
+                        type: "POST",
+                        data: formData + '&product_id=' +
+                            productId, // Include product ID in the form data
+                        success: function(response) {
+                            // Handle success response
+                            console.log(response);
+                            if (response.status === 'success') {
+                                toastr.success(response.message);
+                                updateCartCount();
+
+                            } else {
+                                toastr.error(response.message);
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            toastr.error(" ", error);
+                            // Handle error if any
+                        }
+                    });
+                });
             }
-        });
-    });
+            setTimeout(function() {
+                handleFormSubmission(); // Call the form submission function
+            }, 4000);
+
+            function updateCartCount() {
+                $.ajax({
+                    url: "{{ route('frontend.cartCount') }}", // Replace with your server endpoint
+                    type: 'GET',
+                    success: function(data) {
+                        console.log(data);
+                        $('#cartCount').text(JSON.stringify(data));
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error fetching cart count:', error);
+                    }
+                });
+            }
         });
     </script>
 

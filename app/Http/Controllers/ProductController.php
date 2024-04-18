@@ -6,6 +6,7 @@ use App\Models\Attribute;
 use App\Models\Product;
 use App\Models\Category;
 
+use App\Models\ProductColor;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -22,7 +23,8 @@ class ProductController extends Controller
     {
         $categories=Category::all();
         $option=Attribute::all();
-        return view('products.create', compact('categories','option'));
+        $product_color=ProductColor::all();
+        return view('products.create', compact('categories','option','product_color'));
     }
     public function store(Request $request) :RedirectResponse
     {
@@ -34,6 +36,11 @@ class ProductController extends Controller
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'SKU' => 'required|unique:products,SKU|string|max:255',
             'product_description' => 'required|string',
+            'attribute' => 'nullable|string',
+            'variantImage.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'variantPrice.*' => 'numeric',
+            'variantStock.*' => 'numeric',
+            'variantName.*' => 'string',
         ]);
         $profileImage = null;
      
@@ -48,6 +55,7 @@ class ProductController extends Controller
         $addProduct->user_id = auth()->id();
         $addProduct->category_id = $request->filled('subCategory') ? $request->input('subCategory') : $request->input('category');
         $addProduct->image = $profileImage; // Assign the file name, not the input value
+        $addProduct->isVariant= 0;
         $addProduct->SKU = $request->input('SKU');
         $addProduct->product_description = $request->input('product_description');
         $addProduct->save();

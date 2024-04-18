@@ -333,7 +333,7 @@
                                 <a href="{{ route('detail.show', ['product' => $allProducts->id, 'slug' => generateSlug($allProducts->name)]) }}"
                                     class="btn btn-sm text-dark p-0"><i
                                         class="fas fa-eye text-primary mr-1"></i>ViewDetail</a>
-                                <form id="add-to-cart-form" action="{{ route('carts.store') }}" method="post">
+                                <form id="add-to-cart-form-_{{$allProducts->id}}" action="{{ route('carts.store') }}" method="post">
                                     @csrf
                                     <input type="hidden" name="product_id" id="product_id"
                                         value="{{ $allProducts->id }}">
@@ -398,6 +398,7 @@
                         // Display success message as a toaster notification
                         if (response.status === 'success') {
                             toastr.success(response.message);
+                            updateCartCount();
                         } else {
                             toastr.error(response.message);
                         }
@@ -410,6 +411,19 @@
                     }
                 });
             });
+            function updateCartCount() {
+            $.ajax({
+                url: "{{ route('frontend.cartCount') }}", // Replace with your server endpoint
+                type: 'GET',
+                success: function(data) {
+                    console.log(data);
+                    $('#cartCount').text(JSON.stringify(data));
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching cart count:', error);
+                }
+            });
+        }
             //function to go to the cart.
         });
     </script>
