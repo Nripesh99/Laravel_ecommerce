@@ -7,6 +7,7 @@
             padding: 10px;
             height: 100%;
         }
+
         .backgroundButton {
             padding: 5px;
             border-radius: 5px;
@@ -67,7 +68,7 @@
                 <div class="backgroundColorChoice">
                     @foreach ($product_color as $productColor)
                         <input type="checkbox" name="colorValue[]" value="{{ $productColor->name }}" class="colorValue"
-                            id="color-{{ $productColor->name }}" data-currentColor="color-{{ $productColor->name }}" >
+                            id="color-{{ $productColor->name }}" data-currentColor="color-{{ $productColor->name }}">
                         <label class="backgroundButton" style="background-color: {{ $productColor->name }}"
                             for="color-{{ $productColor->name }}" data-productColor="{{ $productColor->name }}">
                         </label>
@@ -79,13 +80,14 @@
                 <label for="product_name" class="form-label">Product Attribute:</label>
                 <select name="attribute[]" class="form-control attribute " id="product_options" multiple>
                     @foreach ($option as $options)
-                        <option value="{{ $options->id }}" data-name="{{ $options->name }}">{{ $options->name }}
-                        </option>
+                    <option value="{{ $options->id }}" data-name="{{ $options->name }}">{{ $options->name }}
+                    </option>
                     @endforeach
                 </select>
             </div>
-
+            
             <div id="variant_fields"></div>
+            {{-- <a href="#" class="btn btn-primary create" >Create</a> --}}
             <div id="variant" class="mb-3">
             </div>
 
@@ -114,7 +116,7 @@
         </form>
     </div>
 
-    <script>
+     <script>
         $(document).ready(function() {
             $('.subCategoryOption').hide();
             $('#category').change(function() {
@@ -144,11 +146,11 @@
                 // console.log(selectedColors); // Output the object with the selected colors
             });
 
-
+            //product value change yeai bata garnaea 
             // For product options
             $('#product_options').change(function() {
                 // Clear previous content
-                
+
                 $('#variant_fields').empty();
 
                 // Check if any option is selected
@@ -170,10 +172,10 @@
                     });
                 }
                 $('.optionName').change(function() {
-                  
-                    $('.combination').empty();   
-                    var sizesMap = {};
+                // $('.create').click(function() {
 
+                    $('.combination').empty();
+                    var sizesMap = {};
                     $('.optionName').each(function() {
                         var optionName = $(this).attr('name');
                         var optionValue = $(this).val();
@@ -191,7 +193,6 @@
                         var sizes = Object.values(sizesMap);
                         // Initialize the matrix with the first option's sizes
                         var matrix = sizes[0].map(size => [size]);
-
                         // Iterate over the rest of the options
                         for (var i = 1; i < sizes.length; i++) {
                             var newMatrix = [];
@@ -208,33 +209,33 @@
 
                         return matrix;
                     }
-                    let newMergeSizeMap;
-                    
-                    if (!selectedColors || !selectedColors.Colors || selectedColors.Colors
-                        .length === 0) {
-                        // If selectedColors is null, undefined, or Colors array is empty
-                        newMergeSizeMap = {
-                            ...sizesMap
-                        };
-                    } else if (!sizesMap || Object.keys(sizesMap).length === 0) {
-                        // If sizesMap is null, undefined, or an empty object
-                        newMergeSizeMap = {
-                            ...selectedColors
-                        };
-                    } else {
-                        // If both selectedColors and sizesMap exist
-                        newMergeSizeMap = {
-                            ...selectedColors,
-                            ...sizesMap
-                        };
-                    }
+                        let newMergeSizeMap;
 
-                    var combinationsMatrix = generateCombinationsMatrix(newMergeSizeMap);
-                    $('.delete-row-btn').click(function() {
-                        $(this).closest('.row').remove();
-                    });
-                    combinationsMatrix.forEach(combination => {
-                        var attributeField = `
+                        if (!selectedColors || !selectedColors.Colors || selectedColors .Colors.length === 0) {
+                            // If selectedColors is null, undefined, or Colors array is empty
+                            newMergeSizeMap = {
+                                ...sizesMap
+                            };
+                        } else if (!sizesMap || Object.keys(sizesMap).length === 0) {
+                            // If sizesMap is null, undefined, or an empty object
+                            newMergeSizeMap = {
+                                ...selectedColors
+                            };
+                        } else {
+                            // If both selectedColors and sizesMap exist
+                            newMergeSizeMap = {
+                                ...selectedColors,
+                                ...sizesMap
+                            };
+                        }
+
+                        var combinationsMatrix = generateCombinationsMatrix(
+                            newMergeSizeMap);
+                        $('.delete-row-btn').click(function() {
+                            $(this).closest('.row').remove();
+                        });
+                        combinationsMatrix.forEach(combination => {
+                            var attributeField = `
                         <div class="row combination" id="${productName}-${combination.join('-')}">
                             <div class="mb-3 flex-container">
                                 <label for="productName" class="form-label">Product Name:</label>
@@ -246,7 +247,7 @@
                             </div>
                             <div class="mb-3 flex-container">
                                 <label for="_stock" class="form-label">Stock:</label>
-                                <input type="text" class="form-control" name="variantStock[]" id="stock">
+                                <input type="number" class="form-control" name="variantStock[]" id="stock">
                             </div>
                             <div class="mb-3 flex-container">
                                 <label for="" class="form-label">Image:</label><br>
@@ -256,26 +257,25 @@
 
                         `
 
-                        $('#variant').append(attributeField);
-                        // console.log(combination.join('-'));
-                    });
-                    //removing number of unwanted attributes it's determined by - like Macbook-15inch- //
-                    var rows = document.querySelectorAll('.row');
-                    rows.forEach(function(row) {
-                        var rowId = row.id;
-                        if (rowId.charAt(rowId.length - 1) === '-') {
-                            row.remove();
-                        }
-                    });
-                    // console.log(newMergeSizeMap);
-                    var jsonString = JSON.stringify(newMergeSizeMap);
-                    $('#attribute').val(jsonString);
+                            $('#variant').append(attributeField);
+                            // console.log(combination.join('-'));
+                        });
+                        //removing number of unwanted attributes it's determined by - like Macbook-15inch- //
+                        var rows = document.querySelectorAll('.row');
+                        rows.forEach(function(row) {
+                            var rowId = row.id;
+                            if (rowId.charAt(rowId.length - 1) === '-') {
+                                row.remove();
+                            }
+                        });
+                        // console.log(newMergeSizeMap);
+                        var jsonString = JSON.stringify(newMergeSizeMap);
+                        $('#attribute').val(jsonString);
 
 
                 });
-
             });
 
         });
-    </script>
+    </script> 
 @endsection

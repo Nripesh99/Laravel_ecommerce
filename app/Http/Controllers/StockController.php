@@ -22,7 +22,7 @@ class StockController extends Controller
      */
     public function create()
     {
-        $product=Product::all();
+        $product=Product::where('isVariant', 0)->get();
         return view('stocks.create', compact('product'));
     }
 

@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Category;
 
 use App\Models\ProductColor;
+use App\Models\Variant;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -28,6 +29,7 @@ class ProductController extends Controller
     }
     public function store(Request $request) :RedirectResponse
     {
+        // dd($request);
         $request->validate([
             'product_name' => 'required|string|max:255',
             'category' => 'required|string',
@@ -49,16 +51,59 @@ class ProductController extends Controller
             $profileImage = time() . '_' . $image->getClientOriginalName();
             $image->move(public_path('images'), $profileImage);
         }
+        // if ($request->hasFile('variantImage')) {
+        //     $variantImages = $request->file('variantImage');
+        //     foreach ($variantImages as $variantImage) {
+        //         $variantImageName = time() . '_' . $variantImage->getClientOriginalName();
+        //         $variantImage->move(public_path('variant_images'), $variantImageName);
+        //     }
+        // }
+        if($request->input('attribute') === null) {
         $addProduct = new Product;
         $addProduct->name = $request->input('product_name');
         $addProduct->price = $request->input('price');  
         $addProduct->user_id = auth()->id();
+        $addProduct->isVariant= 0;
         $addProduct->category_id = $request->filled('subCategory') ? $request->input('subCategory') : $request->input('category');
         $addProduct->image = $profileImage; // Assign the file name, not the input value
-        $addProduct->isVariant= 0;
         $addProduct->SKU = $request->input('SKU');
         $addProduct->product_description = $request->input('product_description');
         $addProduct->save();
+        $notification = array(
+            'message' => 'added product succesfully',
+            'alert-type' => 'success'
+        );
+        return back()->with($notification);
+         } else{
+            $addProduct = new Product;
+            $addProduct->name = $request->input('product_name');
+            $addProduct->price = $request->input('price');  
+            $addProduct->user_id = auth()->id();
+            $addProduct->color=implode(',', $request->input('colorValue'));
+            $addProduct->category_id = $request->filled('subCategory') ? $request->input('subCategory') : $request->input('category');
+            $addProduct->image = $profileImage; 
+            $addProduct->isVariant= 1;
+            $addProduct->SKU = $request->input('SKU');
+            $addProduct->product_description = $request->input('product_description');
+            $addProduct->attribute = $request->input('attribute');
+            $addProduct->save();
+            $variant= new Variant;
+            if ($request->hasFile('variantImage')) {
+                $variantImages = $request->file('variantImage');
+                foreach ($variantImages as $index => $variantImage) {
+                    $variantImageName = time() . '_' . $variantImage->getClientOriginalName();
+                    $variantImage->move(public_path('variant_images'), $variantImageName);
+                    $variant = new Variant;
+                    $variant->product_id=$addProduct->id;
+                    $variant->image =$variantImageName; 
+                    $variant->price = $request->variantPrice[$index];
+                    $variant->stock = $request->variantStock[$index];
+                    $variant->name = $request->variantName[$index];
+                    $variant->save();
+                }
+            }
+
+        }
         // return redirect()->route('products.show', ['product' => $addProduct->id]);
         $notification = array(
             'message' => 'added product succesfully',
@@ -66,6 +111,7 @@ class ProductController extends Controller
         );
         return back()->with($notification);
     }
+
     public function show(){
 
     }
