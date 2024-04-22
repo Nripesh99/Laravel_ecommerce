@@ -6,6 +6,7 @@ use App\Models\Cart;
 use App\Models\Category;
 use App\Models\Stock;
 use App\Models\User;
+use App\Models\Variant;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
@@ -34,46 +35,84 @@ class CartController extends Controller
      */
     public function store(Request $request)
     {
+
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'product_id' => 'required|exists:products,id|min:1',
             'quantity' => 'required|integer|min:1',
+            'variant' => 'nullable|boolean',
         ]);
-    
-        $existingProduct = Cart::where('product_id', $request->input('product_id'))
-                                ->where('user_id', $request->input('user_id'))
-                                ->first();
-    
-        $existingPerson = User::find($request->input('user_id'));
-    
-        if ($existingProduct && $existingPerson) {
-            $cart = $existingProduct;
-            $actualQuantity = Stock::where('product_id', $request->input('product_id'))->first();
-    
-            if ($actualQuantity->quantity <= 0 || $request->input('quantity') > $actualQuantity->quantity) {
-                return response()->json(['message' => 'No stock present', 'status' => 'error']);
+        if ($request->input('variant') == '0') {
+            $existingProduct = Cart::where('product_id', $request->input('product_id'))
+                ->where('user_id', $request->input('user_id'))
+                ->first();
+
+            $existingPerson = User::find($request->input('user_id'));
+
+            if ($existingProduct && $existingPerson) {
+                $cart = $existingProduct;
+                $actualQuantity = Stock::where('product_id', $request->input('product_id'))->first();
+
+                if ($actualQuantity->quantity <= 0 || $request->input('quantity') > $actualQuantity->quantity) {
+                    return response()->json(['message' => 'No stock present', 'status' => 'error']);
+                }
+
+                if ($cart->quantity + $request->input('quantity') > $actualQuantity->quantity) {
+                    return response()->json(['message' => 'Cart quantity greater than stock', 'status' => 'error']);
+                }
+
+                $cart->quantity += $request->input('quantity');
+                $cart->save();
+                return response()->json(['message' => 'Added to cart', 'status' => 'success']);
+            } else {
+                $cart = new Cart;
+                $actualQuantity = Stock::where('product_id', $request->input('product_id'))->first();
+
+                if ($actualQuantity === null || $actualQuantity->quantity <= 0 || $request->input('quantity') > $actualQuantity->quantity) {
+                    return response()->json(['message' => 'No stock present', 'status' => 'error']);
+                }
+
+                $cart->user_id = $request->input('user_id');
+                $cart->product_id = $request->input('product_id');
+                $cart->quantity += $request->input('quantity');
+                $cart->save();
+                return response()->json(['message' => 'Added to cart', 'status' => 'success']);
             }
-    
-            if ($cart->quantity + $request->input('quantity') > $actualQuantity->quantity) {
-                return response()->json(['message' => 'Cart quantity greater than stock', 'status' => 'error']);
-            }
-    
-            $cart->quantity += $request->input('quantity');
-            $cart->save();
-            return response()->json(['message' => 'Added to cart', 'status' => 'success']);
         } else {
-            $cart = new Cart;
-            $actualQuantity = Stock::where('product_id', $request->input('product_id'))->first();
-    
-            if ($actualQuantity === null || $actualQuantity->quantity <= 0 || $request->input('quantity') > $actualQuantity->quantity) {
-                return response()->json(['message' => 'No stock present', 'status' => 'error']);
+            
+            $existingProduct = Cart::where('product_id', $request->input('product_id'))
+                ->where('user_id', $request->input('user_id'))
+                ->first();
+            $existingPerson = User::find($request->input('user_id'));
+            if ($existingProduct && $existingPerson) {
+                $cart = $existingProduct;
+                $actualQuantity = Variant::where('product_id', $request->input('product_id'))->first();
+
+                if ($actualQuantity->stock <= 0 || $request->input('quantity') > $actualQuantity->stock) {
+                    return response()->json(['message' => 'No stock present', 'status' => 'error']);
+                }
+
+                if ($cart->quantity + $request->input('quantity') > $actualQuantity->stock) {
+                    return response()->json(['message' => 'Cart quantity greater than stock', 'status' => 'error']);
+                }
+
+                $cart->quantity += $request->input('quantity');
+                $cart->save();
+                return response()->json(['message' => 'Added to cart', 'status' => 'success']);
+            } else {
+                $cart = new Cart;
+                $product_id = $request->input('product_id');
+                $actualQuantity = Variant::where('id', '=',"$product_id")->first();
+                if ($actualQuantity === null || $actualQuantity->stock <= 0 || $request->input('quantity') > $actualQuantity->stock) {
+                    return response()->json(['message' => 'No stock present', 'status' => 'error']);
+                }
+                $cart->user_id = $request->input('user_id');
+                $cart->product_id = $actualQuantity->product_id;
+                $cart->variantId =$request->input('product_id');
+                $cart->quantity += $request->input('quantity');
+                $cart->save();
+                return response()->json(['message' => 'Added to cart', 'status' => 'success']);
             }
-    
-            $cart->user_id = $request->input('user_id');
-            $cart->product_id = $request->input('product_id');
-            $cart->quantity += $request->input('quantity');
-            $cart->save();
-            return response()->json(['message' => 'Added to cart', 'status' => 'success']);
         }
     }
 
@@ -135,7 +174,7 @@ class CartController extends Controller
         $existingCart->save();
         $notification = array(
             'message' => 'Cart item updated successfully',
-            'alert-type' =>'success'
+            'alert-type' => 'success'
         );
         return back()->with($notification);
     }

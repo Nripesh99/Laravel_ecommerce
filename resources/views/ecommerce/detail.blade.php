@@ -2,8 +2,22 @@
 @section('content')
 
     <!-- Navbar End -->
+    <style>
+        .backgroundButton {
+            padding: 5px;
+            border-radius: 5px;
+            margin: 0px 5px 10px 0;
+            width: 50px;
+            height: 50px;
+            display: block;
+            text-align: center;
+        }
 
-
+        .backgroundColorChoice {
+            display: flex;
+        }
+    </style>
+    {{-- @dd($productVariant) --}}
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-2">
@@ -39,17 +53,29 @@
                 <div id="product-carousel" class="carousel slide" data-ride="carousel">
                     <div class="carousel-inner border">
                         <div class="carousel-item active">
-                            <img class="w-100 h-100" src="{{ url('/images/' . $product->image) }}" alt="Image">
+                            <img class="w-100 h-100" src="{{ url('/images/' . $product->image) }}" alt="Image"
+                                style="min-height:270px; max-height:565px  ">
                         </div>
-                        <div class="carousel-item">
-                            <img class="w-100 h-100" src="{{ url('/images/' . $product->image) }}" alt="Image">
-                        </div>
-                        <div class="carousel-item">
-                            <img class="w-100 h-100" src="{{ url('/images/' . $product->image) }}" alt="Image">
-                        </div>
-                        <div class="carousel-item">
-                            <img class="w-100 h-100" src="{{ url('/images/' . $product->image) }}" alt="Image">
-                        </div>
+                        @if ($productVariant->isEmpty())
+                            <div class="carousel-item">
+                                <img class="w-100 h-100" src="{{ url('/images/' . $product->image) }}" alt="Image"
+                                    style="min-height:270px; max-height:565px  ">
+                            </div>
+                            <div class="carousel-item">
+                                <img class="w-100 h-100" src="{{ url('/images/' . $product->image) }}" alt="Image"
+                                    style="min-height:270px; max-height:565px  ">
+                            </div>
+                            <div class="carousel-item">
+                                <img class="w-100 h-100" src="{{ url('/images/' . $product->image) }}" alt="Image"
+                                    style="min-height:270px; max-height:565px  ">
+                            </div>
+                        @endif
+                        @foreach ($productVariant as $variant)
+                            <div class="carousel-item">
+                                <img class="w-100 h-100" src="{{ url('/variant_images/' . $variant->image) }}"
+                                    alt="Image" style="min-height:270px; max-height:565px  ">
+                            </div>
+                        @endforeach
                     </div>
                     <a class="carousel-control-prev" href="#product-carousel" data-slide="prev">
                         <i class="fa fa-2x fa-angle-left text-dark"></i>
@@ -62,7 +88,7 @@
 
             <div class="col-lg-7 pb-5">
                 <div class="d-flex">
-                    <h3 class="font-weight-semi-bold d-flex">{{ $product->name }}</h3>
+                    <h3 class="font-weight-semi-bold d-flex" id="productName">{{ $product->name }}</h3>
                     <small class="pt-1 d-flex mx-2">(SKU: {{ $product->SKU }})</small>
                 </div>
                 <div class="d-flex mb-3">
@@ -80,73 +106,49 @@
                     <small class="pt-1 d-flex mx-2"> (stock quantity:
                         {{ isset($product->stock) ? $product->stock->quantity : '0' }})</small>
                 </div>
+                {{-- @dd($productVariant) --}}
                 <p class="mb-4">
                     {{ str_limit($product->product_description, 100) }}
                 </p>
                 <!--Variant not needed for now -->
-                {{-- <div class="d-flex mb-3">
-                    <p class="text-dark font-weight-medium mb-0 mr-3">Sizes:</p>
-                    <form>
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" class="custom-control-input" id="size-1" name="size">
-                            <label class="custom-control-label" for="size-1">XS</label>
-                        </div>
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" class="custom-control-input" id="size-2" name="size">
-                            <label class="custom-control-label" for="size-2">S</label>
-                        </div>
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" class="custom-control-input" id="size-3" name="size">
-                            <label class="custom-control-label" for="size-3">M</label>
-                        </div>
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" class="custom-control-input" id="size-4" name="size">
-                            <label class="custom-control-label" for="size-4">L</label>
-                        </div>
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" class="custom-control-input" id="size-5" name="size">
-                            <label class="custom-control-label" for="size-5">XL</label>
-                        </div>
-                    </form>
-                </div> --}}
-                {{-- <div class="d-flex mb-4">
-                    <p class="text-dark font-weight-medium mb-0 mr-3">Colors:</p>
-                    <form>
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" class="custom-control-input" id="color-1" name="color">
-                            <label class="custom-control-label" for="color-1">Black</label>
-                        </div>
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" class="custom-control-input" id="color-2" name="color">
-                            <label class="custom-control-label" for="color-2">White</label>
-                        </div>
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" class="custom-control-input" id="color-3" name="color">
-                            <label class="custom-control-label" for="color-3">Red</label>
-                        </div>
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" class="custom-control-input" id="color-4" name="color">
-                            <label class="custom-control-label" for="color-4">Blue</label>
-                        </div>
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" class="custom-control-input" id="color-5" name="color">
-                            <label class="custom-control-label" for="color-5">Green</label>
-                        </div>
-                    </form>
-                </div> --}}
+                @if ($product->color == !null)
+                    @php
+                        $product_color = explode(',', $product->color);
+                    @endphp
+                    <label for="" class="mt-4 mb-3">Product Colors</label><br>
+                    <div class="backgroundColorChoice">
+                        @foreach ($product_color as $productColor)
+                            <input type="radio" name="Colors" value="{{ $productColor }}" class="colorValue "
+                                id="Colors-{{ $productColor }}" data-currentColor="Colors-{{ $productColor }}">
+                            <label class=" backgroundButton" style="background-color: {{ $productColor }}"
+                                for="Colors-{{ $productColor }}" data-productColor="{{ $productColor }}">
+                            </label>
+                        @endforeach
+                    </div>
+                @endif
+                @php
+                    $attributes = json_decode($product->attribute);
+                @endphp
+                @if ($product->attribute == !null)
+                    @foreach ($attributes as $attribute => $values)
+                        @if ($attribute !== 'Colors')
+                            <div class="d-flex mb-3">
+                                <p class="text-dark font-weight-medium mb-0 mr-3">{{ $attribute }}:</p>
+                                @foreach ($values as $key => $value)
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" class="custom-control-input"
+                                            id="{{ $attribute }}-{{ $key + 1 }}" value="{{ $value }}"
+                                            name="{{ $attribute }}">
+                                        <label class="custom-control-label"
+                                            for="{{ $attribute }}-{{ $key + 1 }}">{{ $value }}</label>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
+                    @endforeach
+                @endif
                 <div class="d-flex align-items-center mb-4 pt-2">
                     <div class="input-group quantity mr-3" style="width: 130px;">
-                        {{-- <div class="input-group-btn">
-                            <button class="btn btn-primary btn-minus" >
-                            <i class="fa fa-minus"></i>
-                            </button>
-                        </div>
-                        <input type="text" class="form-control  text-center" value="1">
-                        <div class="input-group-btn">
-                            <button class="btn btn-primary btn-plus">
-                                <i class="fa fa-plus"></i>
-                            </button>
-                        </div> --}}
                         <div class="input-group-btn">
                             <button class="btn btn-primary btn-minus" id="minus-btn">
                                 <i class="fa fa-minus"></i>
@@ -160,15 +162,29 @@
                         </button>
                     </div>
                     @auth
-                        <form id="add-to-cart-form" action="{{ route('carts.store') }}" method="post">
-                            @csrf
-                            <input type="hidden" name="product_id" id="product_id" value="{{ $product->id }}">
-                            <input type="hidden" name="user_id" id="user_id" value="{{ auth()->id() }}">
-                            <input type="hidden" name="quantity" id="qty" value="1">
+                        @if ($product->attribute === null)
+                            <form id="add-to-cart-form" action="{{ route('carts.store') }}" method="post">
+                                @csrf
+                                <input type="hidden" name="variant" id="variant" value="0">
+                                <input type="hidden" name="product_id" id="product_id" value="{{ $product->id }}">
+                                <input type="hidden" name="user_id" id="user_id" value="{{ auth()->id() }}">
+                                <input type="hidden" name="quantity" id="qty" value="1">
 
-                            <button type="submit" class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i> Add
-                                To Cart</button>
-                        </form>
+                                <button type="submit" class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i>
+                                    Add To Cart</button>
+                            </form>
+                        @else
+                            <form id="add-to-cart-form" action="{{ route('carts.store') }}" method="post">
+                                @csrf
+                                <input type="hidden" name="variant" id="variant" value="1">
+                                <input type="hidden" class="product_id" name="product_id" id="product_id" value="{{ $product->id }}">
+                                <input type="hidden" name="user_id" id="user_id" value="{{ auth()->id() }}">
+                                <input type="hidden" name="quantity" id="qty" value="1">
+
+                                <button type="submit" disabled class="btn btn-primary px-3 attributebtn"><i
+                                        class="fa fa-shopping-cart mr-1"></i> Add To Cart</button>
+                            </form>
+                        @endif
                     @endauth
                     @guest
                         <a href="{{ route('login') }}" class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i>
@@ -321,7 +337,6 @@
                                     <img class="img-fluid w-100" src="{{ url('/images/' . $allProducts->image) }}"
                                         alt="" style=" min-height:200px; max-height: 200px" />
                                 </a>
-
                             </div>
                             <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
                                 <h6 class="text-truncate mb-3">{{ $allProducts->name }}</h6>
@@ -333,7 +348,9 @@
                                 <a href="{{ route('detail.show', ['product' => $allProducts->id, 'slug' => generateSlug($allProducts->name)]) }}"
                                     class="btn btn-sm text-dark p-0"><i
                                         class="fas fa-eye text-primary mr-1"></i>ViewDetail</a>
-                                <form id="add-to-cart-form-_{{$allProducts->id}}" action="{{ route('carts.store') }}" method="post">
+
+                                <form id="add-to-cart-form-_{{ $allProducts->id }}" action="{{ route('carts.store') }}"
+                                    method="post">
                                     @csrf
                                     <input type="hidden" name="product_id" id="product_id"
                                         value="{{ $allProducts->id }}">
@@ -344,6 +361,7 @@
                                     </button>
                                 </form>
                             </div>
+
                         </div>
                     @endforeach
 
@@ -361,7 +379,6 @@
                 $('#quantity').text(value);
                 $('#qty').val(value);
 
-                console.log('qti');
             }
 
             // Click event for plus button
@@ -384,7 +401,7 @@
 
                 // Extract product ID from form ID
                 var productId = this.id.split('_')[
-                1]; // Assuming your form IDs are in the format 'add-to-cart-form-_{productId}'
+                    1]; // Assuming your form IDs are in the format 'add-to-cart-form-_{productId}'
 
                 // Gather form data
                 var formData = $(this).serialize();
@@ -411,20 +428,99 @@
                     }
                 });
             });
+
             function updateCartCount() {
-            $.ajax({
-                url: "{{ route('frontend.cartCount') }}", // Replace with your server endpoint
-                type: 'GET',
-                success: function(data) {
-                    console.log(data);
-                    $('#cartCount').text(JSON.stringify(data));
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error fetching cart count:', error);
-                }
-            });
-        }
+                $.ajax({
+                    url: "{{ route('frontend.cartCount') }}", // Replace with your server endpoint
+                    type: 'GET',
+                    success: function(data) {
+                        console.log(data);
+                        $('#cartCount').text(JSON.stringify(data));
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error fetching cart count:', error);
+                    }
+                });
+            }
             //function to go to the cart.
+        });
+
+        $(document).ready(function() {
+            // JavaScript
+            var attributes = {}; // Object to store attribute name-value pairs
+            var existingAttr =  {!! $product->attribute ?? 'null' !!};
+            var productVariant = {!! $productVariant !!};
+            console.log(productVariant);
+
+            var attributeOrder = Object.keys( existingAttr); //finding the order of attribute so it could be easily used
+            var productName = $("#productName").text();
+            console.log(productName);
+            $('input[type="radio"]').change(function() {
+                var attributeName = $(this).attr('name'); // Get the attribute name
+                var attributeValue = $(this).val(); // Get the attribute value
+
+                var index = attributeOrder.indexOf(attributeName);
+                if (index !== -1) {
+                    attributes[attributeName] = attributeValue;
+                }
+                // Reconstruct the formatted string in the predefined order
+                var formattedString = productName + '-' + attributeOrder.map(function(attr) {
+                    return attributes[attr] || ''; // Use empty string if attribute value is not set
+                }).join('-');
+                console.log(formattedString);
+                //check whether formatted string contains in productVariant
+
+
+                //finding the id of the clicked product
+                function findVariantIdByName(variants, name) {
+                    const variant = variants.find(variant => variant.name === name);
+                    return variant ? variant.id : null;
+                }
+                const variantId = findVariantIdByName(productVariant, formattedString);
+                $('.product_id').val(variantId);
+                console.log("Variant ID:", variantId);
+
+
+                
+                // Update or add the attribute in the object
+                attributes[attributeName] = attributeValue;
+                var newAttribute = {!! $product->attribute ?? 'null' !!};
+                console.log(newAttribute);
+                console.log(attributes);
+                var formattedString = Object.values(attributes).join('-');
+                // Function to check if the values in b exist in arrays corresponding to keys in a
+                function valuesExistInArrays(a, b) {
+                    for (let key in b) {
+                        if (a.hasOwnProperty(key)) {
+                            if (Array.isArray(a[key]) && a[key].includes(b[key])) {
+                                continue;
+                            } else {
+                                return false;
+                            }
+                        } else {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+
+                // Check if values of b exist within arrays corresponding to keys in a
+                let valuesExist = valuesExistInArrays(newAttribute, attributes);
+                console.log(valuesExist);
+
+                // Check if there is at least one selected option for each attribute
+                var allAttributesSelected = true;
+                $('input[type="radio"]').each(function() {
+                    var name = $(this).attr('name');
+                    if (!attributes[name]) {
+                        allAttributesSelected = false;
+                        return false; // Break the loop if at least one attribute is not selected
+                    }
+                });
+
+                // Enable or disable the button based on whether all attributes are selected and values exist
+                $('.attributebtn').prop('disabled', !(allAttributesSelected && valuesExist));
+            });
         });
     </script>
 @endsection

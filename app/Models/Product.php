@@ -29,5 +29,8 @@ class Product extends Model
     public function order_details(){
         return $this->hasMany(Order_detail::class, 'product_id');
     }
-
+    public function variants()
+    {
+        return $this->hasMany(Variant::class);
+    }
 }

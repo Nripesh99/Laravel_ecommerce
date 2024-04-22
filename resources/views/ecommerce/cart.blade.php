@@ -28,6 +28,7 @@
                     <thead class="bg-secondary text-dark">
                         <tr>
                             <th>Products</th>
+                            <th>Products variant </th>
                             <th>Price</th>
                             <th>Quantity</th>
                             <th>Total</th>
@@ -41,6 +42,7 @@
                                 <img src="" alt="" style="width: 50px" />
                                {{$carts->product->name}}
                             </td>
+                            <td>{{!empty($carts->productVariant->name) ? $carts->productVariant->name : 'null'}}</td>
                             <td class="align-middle" id="price_{{$carts->id}}">{{$carts->product->price}}</td>
                             <td class="align-middle">
                                 <div class="input-group quantity mx-auto" style="width: 100px">

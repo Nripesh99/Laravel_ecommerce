@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Jobs\ProcessingEmail;
 use App\Mail\OrderEmail;
 use App\Models\Cart;
+use App\Models\Variant;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\Order_detail;
@@ -133,12 +134,15 @@ class FrontendController extends Controller
     {
         $allProduct = Product::all();
         $product = Product::find($id);
+        if($product->variant=1){
+            $productVariant=Variant::where('product_id', $product->id)->get();
+        }
         $category_id = Category::where('id', $product->category_id)->first();
         $subCategory = Category::findOrFail($category_id->id);
         $categoriesInBetween = $subCategory->ancestors()->pluck('category_name', 'id');
         $category = Category::all()->where('parent_id', null);
         $cartCount = Cart::where('user_id', auth()->id())->count();
-        return view('ecommerce.detail', compact('product', 'allProduct', 'category', 'categoriesInBetween', 'cartCount'));
+        return view('ecommerce.detail', compact('product', 'allProduct', 'category', 'categoriesInBetween', 'cartCount','productVariant'));
     }
 
     public function cartShow()
